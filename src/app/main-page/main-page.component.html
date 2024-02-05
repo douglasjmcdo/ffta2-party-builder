@@ -1,0 +1,12 @@
+<div class="mainpagewrapper">
+   <p>main-page works!</p>
+
+   <div *ngFor="let unit of this.ps.getParty()">
+    {{unit.getUnitName() }} {{ unit.getID() }}
+    <button (click)="testNameChange()">Change name to Luso</button>
+   </div>
+
+    <a routerLink="/edit" routerLinkActive="active" ariaCurrentWhenActive="page">
+        TAKE ME TO EDIT
+    </a>
+</div>
