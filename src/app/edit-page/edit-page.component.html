@@ -1,5 +1,53 @@
 <div class="editpagewrapper">
-    <p>edit-page works!</p>
-
+    <p>edit-page works! this is edit page for unit {{routed_id }}</p>
     <a routerLink="/main">Take me back to main!</a>
+    <!-- BIGGEST TODO: PIVOT FROM GETPARTYMEMEBERBYID(X) BECAUSE ITS INSANELY POORLY OPTIMIZED -->
+
+    <h2>RACES</h2>
+    <div class="sprite-list-wrapper">
+        <div class="sprite" *ngFor="let entry of this.ps.MOCKRACE"
+            [ngClass]="{'selected-sprite' : this.unit_data.race === entry }">
+            <!-- todo: filter based on selected classes or abilities -->
+            <button class="r-entry" 
+            (click)="this.ps.updatePartyMember(+routed_id, 'race', entry.toString())"
+            >
+                {{ entry }}
+            </button>
+        </div>
+    </div>
+
+    <h2>PRIMARY CLASSES</h2>
+    <div class="sprite-list-wrapper">
+        <div class="sprite" *ngFor="let entry of this.ps.MOCKCLASS"
+            [ngClass]="{'selected-sprite' : this.unit_data.primaryclass === entry }">
+            <!-- todo: filter based on selected race, secclass or abilities -->
+            <button class="c-entry" 
+            (click)="this.ps.updatePartyMember(+routed_id, 'priclass', entry.toString())"
+            >
+                {{ entry }}
+            </button>
+        </div>
+    </div>
+
+    <h2>SECONDARY CLASSES</h2>
+    <div class="sprite-list-wrapper">
+        <div class="sprite" *ngFor="let entry of this.ps.MOCKCLASS"
+            [ngClass]="{'selected-sprite' : this.unit_data.secondaryclass === entry }">
+            <!-- todo: filter based on selected race, priclass or abilities -->
+            <button class="c-entry" 
+            (click)="this.ps.updatePartyMember(+routed_id, 'secclass', entry.toString())"
+            >
+                {{ entry }}
+            </button>
+        </div>    
+    </div>
+
+    <h2>R-ABILITIES</h2>
+    <div class="a-entry" *ngFor="let entry of this.ps.MOCKRABILITY">{{ entry }}</div>
+    
+    <h2>P-ABILITIES</h2>
+    <div class="a-entry" *ngFor="let entry of this.ps.MOCKPABILITY">{{ entry }}</div>
+
+
+
 </div>

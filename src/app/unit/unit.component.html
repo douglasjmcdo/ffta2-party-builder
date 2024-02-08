@@ -1,1 +1,6 @@
-<p>unit display {{ data.unitname }} {{ data.unitid }} {{ data.primaryclass }}  {{ data.race }} </p>
+<div class="unit">
+    <span>{{ data.unitname }} {{ data.unitid }} {{ data.primaryclass }}</span>
+    <span *ngIf="data.secondaryclass!=''">/</span>
+    <span>{{data.secondaryclass}} {{ data.race }}  </span>
+    <a routerLink={{editurl}}>EDIT {{ data.unitid }} </a>
+</div>

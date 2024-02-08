@@ -4,6 +4,7 @@ import { MainPageComponent } from './main-page/main-page.component';
 
 export const routes: Routes = [
   { path: 'main', component: MainPageComponent },
-  { path: 'edit', component: EditPageComponent },
+  { path: 'edit/:routed_id', component: EditPageComponent },
   { path: "", redirectTo: 'main', pathMatch: 'full' },
 ];
+

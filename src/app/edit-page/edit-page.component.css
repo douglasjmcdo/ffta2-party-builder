@@ -1,3 +1,22 @@
 .editpagewrapper {
     background-color: palevioletred;
 }
+
+.sprite-list-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 80vw;
+    background-color:brown;
+    margin-left: 10px;
+    padding: 3px;
+}
+
+.sprite {
+    padding: 2px;
+    margin: 2px;
+    background-color:yellowgreen;
+}
+
+.selected-sprite {
+    background-color: purple;
+}

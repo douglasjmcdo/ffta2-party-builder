@@ -1,9 +1,11 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-unit',
   standalone: true,
-  imports: [],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, NgIf],
   templateUrl: './unit.component.html',
   styleUrl: './unit.component.css'
 })
@@ -21,10 +23,12 @@ export class UnitComponent {
     rability: "",
     pability: "",
   }
+
+   editurl = "/edit/";
   
 
   ngOnInit() {
-    //assign unitid, sortorder here
+    this.editurl += this.data.unitid.toString();
   }
 
   // GETTERS AND SETTERS
@@ -108,5 +112,9 @@ export class UnitComponent {
   }
 
   //END GETTERS/SETTERS
+
+  fetchSprite() {
+    //TODO: using race and primaryclass, fetch a sprite to represent the unit
+  }
 
 }
