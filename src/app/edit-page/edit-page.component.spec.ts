@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from "@angular/router/testing";
 
 import { EditPageComponent } from './edit-page.component';
 
@@ -8,7 +9,7 @@ describe('EditPageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [EditPageComponent]
+      imports: [EditPageComponent, RouterTestingModule]
     })
     .compileComponents();
     

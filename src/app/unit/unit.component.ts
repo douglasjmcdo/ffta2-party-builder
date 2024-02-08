@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
   selector: 'app-unit',
@@ -8,36 +8,59 @@ import { Component, OnInit } from '@angular/core';
   styleUrl: './unit.component.css'
 })
 export class UnitComponent {
-  private unitid: number = -1;
-  sortorder: number = -1;
-  isdefault: Boolean = true;
+  @Input() data = {
+    unitid: -1,
+    sortorder: -1,
+    isdefault: true,
 
-  //this collection is the 'unit data':
-  private unitname: string = "default";
-  race: number = -1;
-  primaryclass: string = "";
-  secondaryclass: string = "";
-  rability: string = "";
-  pability: string = "";
+    //this collection is the 'unit data':
+    unitname: "default",
+    race: -1,
+    primaryclass: "",
+    secondaryclass: "",
+    rability: "",
+    pability: "",
+  }
+  
 
   ngOnInit() {
     //assign unitid, sortorder here
   }
 
+  // GETTERS AND SETTERS
+
   setID(newid: number) {
-    this.unitid = newid;
+    this.data.unitid = newid;
   }
 
   getID() {
-    return this.unitid;    
+    return this.data.unitid;    
   }
 
+  setSortorder(neworder: number) {
+    this.data.sortorder = neworder;
+  }
+
+  getSortorder() {
+    return this.data.sortorder;
+  }
+
+  setDefault(newdef: boolean) {
+    this.data.isdefault = newdef;
+  }
+
+  getDefault() {
+    return this.data.isdefault;
+  }
+
+  // UNIT DATA GETTERS/SETTERS
+
   setUnitName(newname: string) {
-    this.unitname = newname;
+    this.data.unitname = newname;
   }
 
   getUnitName() {
-    return this.unitname;
+    return this.data.unitname;
   }
 
   setRace(newrace: number) {
@@ -45,11 +68,45 @@ export class UnitComponent {
       console.log('error: newrace out of bounds');
       return;
     }
-    this.race = newrace;
+    this.data.race = newrace;
   }
 
   getRace() {
-    return this.race;
+    return this.data.race;
   }
+
+  setPriClass(newclass: string) {
+    this.data.primaryclass = newclass;
+  }
+
+  getPriClass() {
+    return this.data.primaryclass;
+  }
+
+  setSecClass(newclass: string) {
+    this.data.secondaryclass = newclass;
+  }
+
+  getSecClass() {
+    return this.data.secondaryclass;
+  }
+
+  setRAbility(newability: string) {
+    this.data.rability = newability;
+  }
+  
+  getRAbility() {
+    return this.data.rability;
+  }
+
+  setPAbility(newability: string) {
+    this.data.pability = newability;
+  }
+
+  getPAbility() {
+    return this.data.pability;
+  }
+
+  //END GETTERS/SETTERS
 
 }
