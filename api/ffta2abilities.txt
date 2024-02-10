@@ -1,0 +1,49 @@
+AbilityName	IsReactive	ViableRaces	
+Critical: Haste	TRUE	0,2,4	
+Reflex	TRUE	0,1,2,3,5	
+Archer's Bane	TRUE	0,3,4	
+Strike Back	TRUE	0,1,5	
+Magick Counter	TRUE	0,1,2,4,5	
+MP Shield	TRUE	0,2,4	
+Regenerate	TRUE	0,3,4,5	
+Absorb MP	TRUE	0,2,3	
+Replenish MP	TRUE	0	
+Sticky Fingers	TRUE	0,3,4	
+Critical: Quicken	TRUE	2,3,4	
+Return Fire	TRUE	3,4	
+Blur	TRUE	1,4	
+Evade Magick	TRUE	2,3,4	
+Critical: Vanish	TRUE	4,6	
+Critical: Evasion Up	TRUE	3,5	
+Critical: Quicken	TRUE	2,3	
+Critical: Berserk	TRUE	1,6	
+Dragonheart	TRUE	1,6	
+Absorb Damage	TRUE	1,6	
+Blink Counter	TRUE	1,6	
+Gil Snapper	TRUE	6	
+Attack Up	FALSE	0,1,5,6	
+Defense Up	FALSE	0,1,2,5	
+Turbo MP	FALSE	0,2,3	
+Geomancy	FALSE	0,2,4	
+Pierce	FALSE	0,2	
+Monkey Grip	FALSE	0,1,5,6	
+Doublehand	FALSE	0,1,6	
+Dual Wield	FALSE	0	
+Safeguard	FALSE	0,2,4,5,6	
+Halve MP	FALSE	0,1,2,3	
+Immunity	FALSE	0,2	
+Learn	FALSE	0	
+Concentration	FALSE	0,3,4	
+Shieldbearer	FALSE	0,1,4,5,6	
+Death Strike	FALSE	0,6	
+Ribbon-bearer	FALSE	0,1,4	
+Vigilance	FALSE	0	
+Unscarred	FALSE	1,5	
+Tank	FALSE	1,5,6	
+Magick Up	FALSE	2,3	
+Item Lore	FALSE	2,6	
+Spellbound	FALSE	2,3	
+Blood Price	FALSE	3	
+Charged Attacks	FALSE	4	
+Resistance Up	FALSE	5	
+Avoid Traps	FALSE	5,6	
