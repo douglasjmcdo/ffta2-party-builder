@@ -12,6 +12,8 @@ export class PartyService {
 
   private idcount: number = 0;
 
+  CLASSDATA: any;
+
   readonly MOCKCLASS = ["", "Soldier", "Fighter", "Master Monk", "Thief", "Black Mage", "White Mage", "Ninja", "Seer", "Parivir", "Paladin", "Blue Mage", "Illusionist", "Archer", "Hunter"]
   readonly MOCKRABILITY = ["", "Counter", "Magick Counter"];
   readonly MOCKPABILITY = ["", "Shieldbearer", "Item Lore"];
@@ -20,6 +22,14 @@ export class PartyService {
 
   constructor() { 
     this.partyarraysub.next(this.partyarray);
+    this.initializeAPI();
+  }
+
+  async initializeAPI() {
+    let data = await fetch('/api/read-classdata');
+    data.json().then(r => {
+      this.CLASSDATA = r.res.rows;
+    });
   }
 
   //RETURNS THE REQUESTED PARTY MEMBER. RETURNS FIRST PM IF ID IS OOB
@@ -94,7 +104,8 @@ export class PartyService {
       //if new priclass matches secclass, set to pri and clear secclass
     case "priclass":
       {
-        if (!this.MOCKCLASS.includes(newvalue)) {
+        let job = this.CLASSDATA.find((job: { classname: string; }) => job.classname === newvalue);
+        if (!job) {
           console.error("priclass not included in list", newvalue);
           break;
         }
@@ -109,7 +120,8 @@ export class PartyService {
       //if new secclass matches priclass, do nothing UNLESS it's default
     case "secclass":
       {
-        if (!this.MOCKCLASS.includes(newvalue)) {
+        let job = this.CLASSDATA.find((job: { classname: string; }) => job.classname === newvalue);
+        if (!job) {
           console.error("secclass not included in list", newvalue);
           break;
         }

@@ -4,7 +4,7 @@
 //Now the API endpoint has since been disabled for security
 import * as fs from 'fs';
 
-fs.readFile('api/ffta2abilities.txt', 'utf8', (err, data) => {
+fs.readFile('ffta2abilities.txt', 'utf8', (err, data) => {
 if (err) {
     console.error(err);
 }

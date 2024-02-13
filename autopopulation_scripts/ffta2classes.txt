@@ -1,0 +1,57 @@
+ClassName	ViableRaces	DefaultSpriteForRace
+Soldier	0	0
+Fighter	0	
+Paladin	0	
+Parivir	0	
+Thief	0,4	
+Ninja	0	
+White Mage	0,2,3	
+Black Mage	0,2,4	
+Blue Mage	0	
+Seer	0	
+Illusionist	0,2	
+Archer	0,3	
+Hunter	0,5	
+Sky Pirate	0	
+Agent	0	
+Heritor	0	
+Warrior	1	
+White Monk	1	1
+Dragoon	1	
+Cannoneer	1	
+Bishop	1	
+Templar	1	
+Master Monk	1	
+Trickster	1	
+Gladiator	1	
+Defender	1	
+Time Mage	2,4	
+Arcanist	2	
+Beastmaster	2	2
+Sage	2	
+Scholar	2	
+Alchemist	2	
+Fencer	3	3
+Red Mage	3	
+Green Mage	3	
+Spellblade	3	
+Elementalist	3	
+Summoner	3	
+Assassin	3	
+Sniper	3	
+Dancer	3	
+Animist	4	4
+Moogle Knight	4	
+Fusilier	4	
+Chocobo Knight	4	
+Tinker	4	
+Juggler	4	
+Flintlock	4	
+Bard	4	
+Geomancer	5	
+Ravager	5	
+Raptor	5	5
+Ranger	6	6
+Viking	6	
+Lanista	6	
+Berserker	6	

@@ -5,7 +5,7 @@
 
     <h2>RACES</h2>
     <div class="sprite-list-wrapper">
-        <div class="sprite" *ngFor="let entry of this.ps.MOCKRACE"
+        <div class="sprite" *ngFor="let entry of this.racefilter"
             [ngClass]="{'selected-sprite' : this.unit_data.race === entry }">
             <!-- todo: filter based on selected classes or abilities -->
             <button class="r-entry" 
@@ -18,26 +18,26 @@
 
     <h2>PRIMARY CLASSES</h2>
     <div class="sprite-list-wrapper">
-        <div class="sprite" *ngFor="let entry of this.ps.MOCKCLASS"
-            [ngClass]="{'selected-sprite' : this.unit_data.primaryclass === entry }">
+        <div class="sprite" *ngFor="let entry of this.priclassfilter"
+            [ngClass]="{'selected-sprite' : this.unit_data.primaryclass === entry['classname'] }">
             <!-- todo: filter based on selected race, secclass or abilities -->
             <button class="c-entry" 
-            (click)="this.ps.updatePartyMember(+routed_id, 'priclass', entry.toString())"
+            (click)="this.ps.updatePartyMember(+routed_id, 'priclass', entry['classname'].toString())"
             >
-                {{ entry }}
+                {{ entry['classname'] }}
             </button>
         </div>
     </div>
 
     <h2>SECONDARY CLASSES</h2>
     <div class="sprite-list-wrapper">
-        <div class="sprite" *ngFor="let entry of this.ps.MOCKCLASS"
-            [ngClass]="{'selected-sprite' : this.unit_data.secondaryclass === entry }">
+        <div class="sprite" *ngFor="let entry of this.secclassfilter"
+            [ngClass]="{'selected-sprite' : this.unit_data.secondaryclass === entry['classname'] }">
             <!-- todo: filter based on selected race, priclass or abilities -->
             <button class="c-entry" 
-            (click)="this.ps.updatePartyMember(+routed_id, 'secclass', entry.toString())"
+            (click)="this.ps.updatePartyMember(+routed_id, 'secclass', entry['classname'].toString())"
             >
-                {{ entry }}
+                {{ entry['classname'] }}
             </button>
         </div>    
     </div>

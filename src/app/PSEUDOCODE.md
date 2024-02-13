@@ -1,11 +1,13 @@
-DATABASE INFO
+DATABASE: VERCEL POSTGRESQL
     DATABASE TABLE: CLASS INFO
     entry info:
         string classname
         intarray viable_races
-        bool default_race_sprite
-        array moveset
-        array of pairs sprite [int race, string spriteurl]
+        optional int default_race_sprite (empty unless it is the default for x race)
+
+        // sprite urls can be autocalculated: 
+        //"FFTA2-" + [optional: race if multiple races] + classname + "Sprite.webp"
+        //f.ex. "FFTA2_SoldierSprite.webp" or "FFTA2_HumeWhiteMageSprite.webp"
 
     DATABASE TABLE: ABILITY INFO
     entry info:
@@ -17,6 +19,7 @@ DATABASE INFO
         string movename
         string description
         string elemental
+        string[] classes (i think this caps at 2 or 3?)
 
 
 Structural design:
@@ -60,14 +63,18 @@ MAIN PAGE:
 
     COMPONENT: PARTYANALYSIS
         uncertain... displays some sort of info/analysis. possibilities:
+
+        moveset questions:
         how many party members know x move?  (f.ex. silence, exorcism, etc)
         maybe better, how many party members have ACCESS to x status effect? (sleep, silence...)
         how many party members have access to healing/elemental moves/etc?
+        how many party members have area moves?
+
+        class-based questions (info would likely need adding to class table)
         how many party members have a base movement of 3 vs 4 tiles?
         how many party members have "high" stats aka stats over x number? idk if i want to add a stat calculator
         how many party members are focused on magic/physical/hybrid?
         how many party members are ranged v melee?
-        how many party members have area moves?
 
     COMPONENT: EXPORTMENU
         button: convert party to txt format and download as .txt file
