@@ -10,4 +10,5 @@ export interface Unitdata {
     secondaryclass: string,
     rability: string,
     pability: string,
+    changetracker: number
 }

@@ -11,12 +11,27 @@
     padding: 3px;
 }
 
+.sprite-wrapper {
+    padding: 1px;
+    margin: 2px;
+    border-radius: 15px;
+    background-color: #d0ff3722;
+}
+
 .sprite {
     padding: 2px;
     margin: 2px;
-    background-color:yellowgreen;
+    border-radius: 15px;
+    background-color: #d0ff3722;
+    border: none;
 }
 
 .selected-sprite {
-    background-color: purple;
+    background-color: yellow;
+}
+
+.btn-img {
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
 }

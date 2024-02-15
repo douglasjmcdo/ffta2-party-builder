@@ -69,7 +69,7 @@ export class UnitComponent {
 
   setRace(newrace: number) {
     if (newrace > 9 || newrace < -1) {
-      console.log('error: newrace out of bounds');
+      console.error('error: newrace out of bounds');
       return;
     }
     this.data.race = newrace;

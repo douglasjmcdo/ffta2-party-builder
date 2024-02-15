@@ -11,13 +11,14 @@ export class PartyService {
   partyarraysub$ = this.partyarraysub.asObservable();
 
   private idcount: number = 0;
+  isloaded = false;
 
   CLASSDATA: any;
 
-  readonly MOCKCLASS = ["", "Soldier", "Fighter", "Master Monk", "Thief", "Black Mage", "White Mage", "Ninja", "Seer", "Parivir", "Paladin", "Blue Mage", "Illusionist", "Archer", "Hunter"]
   readonly MOCKRABILITY = ["", "Counter", "Magick Counter"];
   readonly MOCKPABILITY = ["", "Shieldbearer", "Item Lore"];
-  readonly MOCKRACE = [-1, 0, 1, 2, 3, 4, 5, 6];
+  readonly RACENUMS = [-1, 0, 1, 2, 3, 4, 5, 6];
+  readonly RACENAMES = ["Hume", "Bangaa", "Nu Mou", "Viera", "Moogle", "Gria", "Seeq"];
 
 
   constructor() { 
@@ -30,11 +31,12 @@ export class PartyService {
     data.json().then(r => {
       this.CLASSDATA = r.res.rows;
     });
+    console.log("API read_classdata called");
+    this.isloaded = true;
   }
 
   //RETURNS THE REQUESTED PARTY MEMBER. RETURNS FIRST PM IF ID IS OOB
   getPartyMemberById(id: number) {
-    console.log('test', id, this.partyarray.length);
     let correctunit = this.partyarray.find((el) => el.unitid === id);
     if (correctunit == undefined) {
       console.error("member of id ", id, "DNE");
@@ -59,6 +61,7 @@ export class PartyService {
       secondaryclass: "",
       rability: "",
       pability: "",
+      changetracker: 0
     };
 
     let newid = this.idcount;
@@ -68,7 +71,6 @@ export class PartyService {
     this.partyarray.push(newunit);
     //push updated partyarray to subscribers
     this.partyarraysub.next(this.partyarray);
-    console.log("setting new party member #", this.partyarray[this.partyarray.length-1].unitid);
     return newid;
   }
 
@@ -81,10 +83,11 @@ export class PartyService {
     case "name":
       {
         if (newvalue.length > 16) {
-          console.log("name is longer than 16 characters", newvalue);
+          console.error("name is longer than 16 characters", newvalue);
           break;
         }
         this.partyarray[id].unitname = newvalue;
+        this.partyarray[id].changetracker++;
         break;
       };
 
@@ -97,6 +100,7 @@ export class PartyService {
           break;
         }
         this.partyarray[id].race = numval;
+        this.partyarray[id].changetracker++;
         break;
       }
       
@@ -111,8 +115,10 @@ export class PartyService {
         }
         if (this.partyarray[id].secondaryclass== newvalue) {
           this.partyarray[id].secondaryclass = "";
+          this.partyarray[id].changetracker++;
         }
         this.partyarray[id].primaryclass = newvalue;
+        this.partyarray[id].changetracker++;
         break;
       }
 
@@ -126,10 +132,11 @@ export class PartyService {
           break;
         }
         if (this.partyarray[id].primaryclass == newvalue && newvalue != "") {
-          console.log("new class is already assigned to priclass", newvalue);
+          console.error("new class is already assigned to priclass", newvalue);
           break;
         }
         this.partyarray[id].secondaryclass = newvalue;
+        this.partyarray[id].changetracker++;
         break;
       }
 
@@ -137,10 +144,11 @@ export class PartyService {
     case "rability":
       {
         if (!this.MOCKRABILITY.includes(newvalue)) {
-          console.log("rability not included in list", newvalue);
+          console.error("rability not included in list", newvalue);
           break;
         }
         this.partyarray[id].rability = newvalue;
+        this.partyarray[id].changetracker++;
         break;
       }
 
@@ -148,10 +156,11 @@ export class PartyService {
     case "pability":
       {
         if (!this.MOCKPABILITY.includes(newvalue)) {
-          console.log("pability not included in list", newvalue);
+          console.error("pability not included in list", newvalue);
           break;
         }
         this.partyarray[id].pability = newvalue;
+        this.partyarray[id].changetracker++;
         break;
       }
     }

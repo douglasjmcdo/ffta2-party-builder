@@ -20,7 +20,6 @@ export class MainPageComponent {
   constructor(public ps: PartyService) {}
 
   ngOnInit() {
-    console.log(this.ps.partyarray)
   }
 
   testNameChange() {

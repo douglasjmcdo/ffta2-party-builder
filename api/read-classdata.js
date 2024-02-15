@@ -17,7 +17,7 @@ export default async function handler(request, response) {
         res = await sql`SELECT * FROM ClassInfo WHERE DefaultSpriteForRace=${DefaultSprite}`;
     }
     else {
-      res = await sql`SELECT * FROM ClassInfo`;
+      res = await sql`SELECT * FROM ClassInfo ORDER BY CASE WHEN classname = '' THEN 1 ELSE 2 END, viableraces`;
     }
 
     return response.status(200).json({ res });

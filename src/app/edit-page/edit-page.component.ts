@@ -4,11 +4,39 @@ import { PartyService } from '../party.service';
 import { CommonModule } from '@angular/common';
 import { Unitdata } from '../unitdata';
 import { Observable, Subscription, of } from 'rxjs';
+import { Pipe, PipeTransform } from '@angular/core';
+
+
+@Pipe({
+  standalone: true,
+  name: 'selectSpriteGivenViableRace'
+})
+export class SelectSpriteGivenViableRacePipe implements PipeTransform {
+  transform(ct: number, unit_data: Unitdata, viableraces: string, racenames:string[], racefilter: number[], args?: any): any {
+    //if accidentally called when not needed, return empty
+    console.log("checking for spam");
+    if (viableraces.length <= 1) {
+      return "";
+    }
+    //if a race has been specified, use that one
+    if (unit_data.race != -1) {
+      return racenames[unit_data.race];
+    }
+    //if race has been filtered, return first match between viableraces and racefilter
+    for (let r of racefilter) {
+      if (viableraces.includes(r.toString())) {
+        return racenames[r];
+      }
+    }
+    //as a failsafe, use the first in the list
+    return racenames[+viableraces[0]];    
+  }
+}
 
 @Component({
   selector: 'app-edit-page',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, CommonModule],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, CommonModule, SelectSpriteGivenViableRacePipe],
   templateUrl: './edit-page.component.html',
   styleUrl: './edit-page.component.css'
 })
@@ -27,27 +55,30 @@ export class EditPageComponent {
     secondaryclass: "",
     rability: "",
     pability: "",
+    changetracker: -1,
   }
   priclassfilter;
   secclassfilter;
   racefilter;
+  defaultsprites: Array<String> = [];
 
   public subscriber: Subscription = new Subscription;
 
   constructor(public ps: PartyService) {
     this.priclassfilter = this.ps.CLASSDATA;
     this.secclassfilter = this.ps.CLASSDATA;
-    this.racefilter = this.ps.MOCKRACE;
+    this.racefilter = this.ps.RACENUMS;
   }
 
   ngOnInit() {
     //whenever the service data changes, the subscriber will auto-update unit_data
+    this.initDefaultRaceSprites();
     this.subscriber = this.ps.partyarraysub$.subscribe(data => {
       this.unit_data = data[+this.routed_id];
       //if any relevant unit data has changed, rerun filters
       this.filterPri();
-      this.FilterSec();
-      this.FilterRace();
+      this.filterSec();
+      this.filterRace();
     })
   }
 
@@ -64,14 +95,15 @@ export class EditPageComponent {
       this.priclassfilter = this.filterClassByDefinedRace();
     }
     //else, if the unit has secondary class, filter on all viable races for that class
-    //also remove secclass from priclass pool?
-    if (this?.unit_data['secondaryclass'] != "") {
+    //optional: also remove secclass from priclass pool?
+     else if (this?.unit_data['secondaryclass'] != "") {
       this.priclassfilter = this.filterClassByImpliedRace(this?.unit_data['secondaryclass']);
     }
   }
 
-  FilterSec() {
+  filterSec() {
     this.secclassfilter = this.ps.CLASSDATA;
+    //todo: always remove AGENT class bc he cant double class lol
     if (this?.unit_data['race'] != -1) {
       this.secclassfilter = this.filterClassByDefinedRace();
     }
@@ -80,8 +112,8 @@ export class EditPageComponent {
     }
   }
 
-  FilterRace() {
-    this.racefilter = this.ps.MOCKRACE;
+  filterRace() {
+    this.racefilter = this.ps.RACENUMS;
     //if the unit has any classes, filter on those.
     //filterRaceByClass is designed to stack so these won't overwrite each other
     if (this?.unit_data['primaryclass']) {
@@ -128,7 +160,11 @@ export class EditPageComponent {
     });
   }
 
-  //utility class
+
+  //////////////////////////////
+  //UTILITY CLASSES
+  //////////////////////////////
+
   //input: class. output: array of strings indicating viable races
   givenClassReturnViableRaceList(classname: string) {
     return this.ps.CLASSDATA.find((job: {classname: string; }) =>
@@ -136,5 +172,19 @@ export class EditPageComponent {
     ).viableraces.split(",");
   }
 
+  //input: race. output: name of class for default sprite
+  givenRaceReturnDefaultClassName(race: number) {
+    if (race==-1) {return "Null"};
+    return this.ps.CLASSDATA?.find((job: {defaultspriteforrace: number}) =>
+      job.defaultspriteforrace === race
+    ).classname;
+  }
+
+  initDefaultRaceSprites() {
+    for (let race of this.ps.RACENUMS) {
+      this.defaultsprites.push(this.givenRaceReturnDefaultClassName(race));
+    }
+  }
 
 }
+
