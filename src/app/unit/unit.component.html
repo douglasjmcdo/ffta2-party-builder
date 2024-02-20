@@ -1,6 +1,14 @@
 <div class="unit">
-    <span>{{ data.unitname }} {{ data.unitid }} {{ data.primaryclass }}</span>
-    <span *ngIf="data.secondaryclass!=''">/</span>
-    <span>{{data.secondaryclass}} {{ data.race }}  </span>
+    <div> {{data.unitname }} {{data.unitid}} {{this.ps.RACENAMES[data.race]}} </div>
+    <img 
+    class="unit-sprite" 
+    alt="SPRITE TBD" 
+    src="{{this.data.changetracker | selectSprite:this.data:this?.priclassentry}}">
+    <div class="stat-box">
+        <div> A=> {{data.primaryclass }}</div>
+        <div> A=> {{data.secondaryclass }}</div>
+        <div> R=7 {{data.rability }}</div>
+        <div> P^ {{data.pability }}</div>
+    </div>
     <a routerLink={{editurl}}>EDIT {{ data.unitid }} </a>
 </div>

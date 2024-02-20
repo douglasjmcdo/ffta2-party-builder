@@ -1,16 +1,19 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { PRIMARY_OUTLET, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { NgIf } from '@angular/common';
+import { Unitdata } from '../unitdata';
+import { PartyService } from '../party.service';
+import { SelectSpritePipe } from '../select-sprite.pipe';
 
 @Component({
   selector: 'app-unit',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, NgIf],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, NgIf, SelectSpritePipe],
   templateUrl: './unit.component.html',
   styleUrl: './unit.component.css'
 })
 export class UnitComponent {
-  @Input() data = {
+  @Input() data: Unitdata = {
     unitid: -1,
     sortorder: -1,
     isdefault: true,
@@ -18,17 +21,23 @@ export class UnitComponent {
     //this collection is the 'unit data':
     unitname: "default",
     race: -1,
+    impliedrace: [-1],
     primaryclass: "",
     secondaryclass: "",
     rability: "",
     pability: "",
+    changetracker: -1,
   }
 
-   editurl = "/edit/";
+  editurl = "/edit/";
+  priclassentry: any;
   
+  constructor(public ps: PartyService) {}
 
   ngOnInit() {
+    console.log("INIT");
     this.editurl += this.data.unitid.toString();
+    this.priclassentry = this.ps.getXClassInfo(this.data.primaryclass);
   }
 
   // GETTERS AND SETTERS

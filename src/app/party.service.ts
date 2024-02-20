@@ -14,12 +14,12 @@ export class PartyService {
   isloaded = false;
 
   CLASSDATA: any;
+  RABILITYDATA: any;
+  PABILITYDATA: any;
 
-  readonly MOCKRABILITY = ["", "Counter", "Magick Counter"];
-  readonly MOCKPABILITY = ["", "Shieldbearer", "Item Lore"];
   readonly RACENUMS = [-1, 0, 1, 2, 3, 4, 5, 6];
   readonly RACENAMES = ["Hume", "Bangaa", "Nu Mou", "Viera", "Moogle", "Gria", "Seeq"];
-
+  defaultsprites: Array<string> = [];
 
   constructor() { 
     this.partyarraysub.next(this.partyarray);
@@ -30,8 +30,19 @@ export class PartyService {
     let data = await fetch('/api/read-classdata');
     data.json().then(r => {
       this.CLASSDATA = r.res.rows;
+      this.initDefaultRaceSprites();
     });
     console.log("API read_classdata called");
+    data = await fetch('/api/read-abilitydata?Reactive=true');
+    data.json().then(r => {
+      this.RABILITYDATA = r.res.rows;      
+    });
+    data = await fetch('/api/read-abilitydata?Reactive=false');
+    data.json().then(r => {
+      this.PABILITYDATA = r.res.rows;      
+    });
+    console.log("API read_abilitydata called");
+
     this.isloaded = true;
   }
 
@@ -57,6 +68,7 @@ export class PartyService {
       isdefault: true,
       unitname: "default",
       race: -1,
+      impliedrace: [-1],
       primaryclass: "",
       secondaryclass: "",
       rability: "",
@@ -92,6 +104,7 @@ export class PartyService {
       };
 
       //race must be an int between -1 and 6
+      //if race is already assigned, then unassign
     case "race":
       {
         let numval: number = +newvalue;
@@ -99,12 +112,30 @@ export class PartyService {
           console.error('race number is out of bounds -1 to 6', numval)
           break;
         }
-        this.partyarray[id].race = numval;
+        else if (numval == this.partyarray[id].race) {
+          this.partyarray[id].race = -1;
+        } 
+        else {
+          this.partyarray[id].race = numval;
+        }
         this.partyarray[id].changetracker++;
         break;
       }
+
+      //this variable is only updated in response to other vars being updated.
+      //as such, we end the function and DONT push a subscription to avoid infinite recursion
+    case "impliedrace":
+      {
+        let newnumarray = [];
+        for (let i of newvalue.split(',')) {
+          newnumarray.push(+i);
+        }
+        this.partyarray[id].impliedrace = newnumarray;
+        return;
+      }
       
-      //priclass must exist in predetermined list of classes
+      //newvalue must exist in predetermined list of classes
+      //if priclass already assigned newvalue, unassign
       //if new priclass matches secclass, set to pri and clear secclass
     case "priclass":
       {
@@ -113,16 +144,22 @@ export class PartyService {
           console.error("priclass not included in list", newvalue);
           break;
         }
-        if (this.partyarray[id].secondaryclass== newvalue) {
-          this.partyarray[id].secondaryclass = "";
-          this.partyarray[id].changetracker++;
+        else if (this.partyarray[id].primaryclass == newvalue) {
+          this.partyarray[id].primaryclass = "";
         }
-        this.partyarray[id].primaryclass = newvalue;
+        else if (this.partyarray[id].secondaryclass== newvalue) {
+          this.partyarray[id].secondaryclass = "";
+          this.partyarray[id].primaryclass = newvalue;
+        } 
+        else {
+          this.partyarray[id].primaryclass = newvalue;
+        }
         this.partyarray[id].changetracker++;
         break;
       }
 
       //secclass must exist in predetermined list of classes
+      //if secclass already assigned newvalue, unassign
       //if new secclass matches priclass, do nothing UNLESS it's default
     case "secclass":
       {
@@ -131,35 +168,49 @@ export class PartyService {
           console.error("secclass not included in list", newvalue);
           break;
         }
-        if (this.partyarray[id].primaryclass == newvalue && newvalue != "") {
+        else if (this.partyarray[id].secondaryclass == newvalue) {
+          this.partyarray[id].secondaryclass = "";
+        }
+        else if (this.partyarray[id].primaryclass == newvalue && newvalue != "") {
           console.error("new class is already assigned to priclass", newvalue);
           break;
+        } else {
+          this.partyarray[id].secondaryclass = newvalue;
         }
-        this.partyarray[id].secondaryclass = newvalue;
         this.partyarray[id].changetracker++;
         break;
       }
 
       //rability must exist in predetermined list of rabilities
+      //if already assigned, unassign
     case "rability":
       {
-        if (!this.MOCKRABILITY.includes(newvalue)) {
+        let rab = this.RABILITYDATA.find((ab: {abilityname: string; }) => ab.abilityname === newvalue);
+        if (!rab) {
           console.error("rability not included in list", newvalue);
           break;
+        } else if (this.partyarray[id].rability == newvalue) {
+          this.partyarray[id].rability = "";
+        } else {
+          this.partyarray[id].rability = newvalue;
         }
-        this.partyarray[id].rability = newvalue;
         this.partyarray[id].changetracker++;
         break;
       }
 
       //pability must exist in predetermined list of pabilities
+      //if already assigned, unassign
     case "pability":
       {
-        if (!this.MOCKPABILITY.includes(newvalue)) {
+        let pab = this.PABILITYDATA.find((ab: {abilityname: string; }) => ab.abilityname === newvalue);
+        if (!pab) {
           console.error("pability not included in list", newvalue);
           break;
+        }else if (this.partyarray[id].pability == newvalue) {
+          this.partyarray[id].pability = "";
+        } else {
+          this.partyarray[id].pability = newvalue;
         }
-        this.partyarray[id].pability = newvalue;
         this.partyarray[id].changetracker++;
         break;
       }
@@ -179,5 +230,50 @@ export class PartyService {
     return;
   }
 
+  /////////////////
+  //UTILITY CLASSES -- FOR RETRIEVING SPECIFIC INFORMATION OUT OF DATA ARRAYS
+  /////////////////
+
+  //GIVEN CLASSNAME, RETURN ENTRY FROM CLASSDATA
+  getXClassInfo(classname: string) {
+    if (classname == "") { return undefined };
+    return this.CLASSDATA?.find((job: {classname: string;}) => job.classname === classname);
+  }
+
+  //GIVEN CLASSNAME, RETURN VIABLE RACES IN AN ARRAY OF STRINGS
+  getClassViableRaces(classname: string) {
+    return this.CLASSDATA?.find((job: {classname: string; }) =>
+      job.classname === classname
+    ).viableraces.split(",");
+  }
+
+  //GIVEN ABILITY AND REACTIVE BOOL, GET VIABLE RACES IN AN ARRAY OF STRINGS
+  getAbilityViableRaces(abilityname: string, reactive: boolean) {
+    if (reactive) {
+      return this.RABILITYDATA?.find((job: {abilityname: string; }) =>
+        job.abilityname === abilityname
+      ).viableraces.split(",");
+    } else {
+      return this.PABILITYDATA?.find((job: {abilityname: string; }) =>
+        job.abilityname === abilityname
+      ).viableraces.split(",");
+    }
+  }
+
+  //GIVEN RACE, GET NAME OF CLASS FOR DEFAULTSPRITE
+  getDefaultSpriteForRace(race: number) {
+    if (race==-1) {return "Null"};
+    return this.CLASSDATA?.find((job: {defaultspriteforrace: number}) =>
+      job.defaultspriteforrace === race
+    ).classname;
+  }
+
+  
+  //initializes names for defaultsprites variable
+  initDefaultRaceSprites() {
+    for (let race of this.RACENUMS) {
+      this.defaultsprites.push(this.getDefaultSpriteForRace(race));
+    }
+  }
 
 }

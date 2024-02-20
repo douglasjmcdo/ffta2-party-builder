@@ -1,3 +1,9 @@
 .mainpagewrapper {
     background-color: aquamarine;
 }
+
+.unit-list {
+    display: flex;
+    max-width: 90vw;
+    flex-wrap: wrap;
+}

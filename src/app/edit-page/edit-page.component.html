@@ -3,68 +3,77 @@
     <a routerLink="/main">Take me back to main!</a>
 
     <h2>RACES</h2>
-    <div class="sprite-list-wrapper">
-        <div class="sprite-wrapper" *ngFor="let entry of this.racefilter">
+    <div class="list-wrapper">
+        <div class="sprite-wrapper" *ngFor="let entry of this.unit_data['impliedrace']">
             <button 
-                class="r-entry sprite"  
-                [ngClass]="{'selected-sprite' : this.unit_data.race === entry }"
-                (click)="this.ps.updatePartyMember(+routed_id, 'race', entry.toString())"
+            class="r-entry sprite"  
+            title="{{this.ps.defaultsprites[entry + 1]}}"
+            [ngClass]="{'selected-sprite' : this.unit_data.race === entry }"
+            (click)="this.ps.updatePartyMember(+routed_id, 'race', entry.toString())"
             >
-            <!-- note: this assumes defaultsprites is in the same order as racefilter & race-exclusive -->
-                <img class="btn-img" alt="{{defaultsprites[entry + 1]}}"
-                src='../../assets/class_sprites/FFTA2-{{defaultsprites[entry + 1]}}Sprite.webp'
+            <!-- note: this assumes defaultsprites is in the same order as unit_data['impliedrace'] & race-exclusive -->
+                <img class="btn-img" alt="{{this.ps.defaultsprites[entry + 1]}}"
+                src='../../assets/class_sprites/FFTA2-{{this.ps.defaultsprites[entry + 1]}}Sprite.webp'
                 >
             </button>
         </div>
     </div>
 
     <h2>PRIMARY CLASSES</h2>
-    <div class="sprite-list-wrapper">
+    <div class="list-wrapper">
         <div class="sprite-wrapper" *ngFor="let entry of this.priclassfilter">
-            <!-- todo: filter based on selected abilities -->
-            <button class="c-entry sprite" 
+            <button 
+            class="c-entry sprite"
+            title="{{entry['classname']}}"
             [ngClass]="{'selected-sprite' : this.unit_data.primaryclass === entry['classname'] }"
             (click)="this.ps.updatePartyMember(+routed_id, 'priclass', entry['classname'])"
             >
-                <img *ngIf="entry['viableraces'].length >= 2 && entry['classname'] != ''" 
+                <img
                 class="btn-img" alt="{{entry['classname']}}"
-                src="../../assets/class_sprites/FFTA2-{{this.unit_data.changetracker | selectSpriteGivenViableRace:this.unit_data:entry['viableraces']:this.ps.RACENAMES:this.racefilter}}{{entry['classname']}}Sprite.webp">
-                <img *ngIf="entry['viableraces'].length < 2"
-                class="btn-img" alt="{{entry['classname']}}"
-                src="../../assets/class_sprites/FFTA2-{{entry['classname']}}Sprite.webp">
-                <img *ngIf="entry['classname'] == ''"
-                class="btn-img"  alt="{{entry['classname']}}"
-                src="../../assets/class_sprites/FFTA2-NullSprite.webp">
+                src="{{this.unit_data.changetracker | selectSprite:this.unit_data:entry}}">
             </button>
         </div>
     </div>
 
     <h2>SECONDARY CLASSES</h2>
-    <div class="sprite-list-wrapper">
+    <div class="list-wrapper">
         <div class="sprite-wrapper" *ngFor="let entry of this.secclassfilter">
-            <!-- todo: filter based on selected abilities -->
-            <button class="c-entry sprite"
+            <button 
+            class="c-entry sprite"
+            title="{{entry['classname']}}"
             [ngClass]="{'selected-sprite' : this.unit_data.secondaryclass === entry['classname'] }" 
             (click)="this.ps.updatePartyMember(+routed_id, 'secclass', entry['classname'])"
             >
-                <img *ngIf="entry['viableraces'].length >= 2 && entry['classname'] != ''" 
+                <img
                 class="btn-img" alt="{{entry['classname']}}"
-                src="../../assets/class_sprites/FFTA2-{{this.unit_data.changetracker | selectSpriteGivenViableRace:this.unit_data:entry['viableraces']:this.ps.RACENAMES:this.racefilter}}{{entry['classname']}}Sprite.webp">
-                <img *ngIf="entry['viableraces'].length < 2"
-                class="btn-img" alt="{{entry['classname']}}"
-                src="../../assets/class_sprites/FFTA2-{{entry['classname']}}Sprite.webp">
-                <img *ngIf="entry['classname'] == ''"
-                class="btn-img" alt="{{entry['classname']}}"
-                src="../../assets/class_sprites/FFTA2-NullSprite.webp">
+                src="{{this.unit_data.changetracker | selectSprite:this.unit_data:entry}}">
             </button>
         </div>    
     </div>
 
-    <h2>R-ABILITIES</h2>
-    <div class="a-entry" *ngFor="let entry of this.ps.MOCKRABILITY">{{ entry }}</div>
+    <h2>REACTION ABILITIES</h2>
+    <div class="list-wrapper">
+        <button 
+        class="a-entry"  *ngFor="let entry of this.rabfilter"
+        title="{{entry['abilityname']}}"
+        [ngClass]="{'selected-a-entry' : this.unit_data.rability === entry['abilityname'] }"
+        (click)="this.ps.updatePartyMember(+routed_id, 'rability', entry['abilityname'])"
+        >
+            {{ entry['abilityname'] }}
+        </button>
+    </div>
     
-    <h2>P-ABILITIES</h2>
-    <div class="a-entry" *ngFor="let entry of this.ps.MOCKPABILITY">{{ entry }}</div>
+    <h2>PASSIVE ABILITIES</h2>
+    <div class="list-wrapper" >
+        <button 
+        class="a-entry" *ngFor="let entry of this.pabfilter"
+        title="{{entry['abilityname']}}"
+        [ngClass]="{'selected-a-entry' : this.unit_data.pability === entry['abilityname'] }"
+        (click)="this.ps.updatePartyMember(+routed_id, 'pability', entry['abilityname'])"
+        >
+            {{ entry['abilityname'] }}
+        </button>
+    </div>
 
 
 

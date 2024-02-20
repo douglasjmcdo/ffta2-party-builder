@@ -1,4 +1,14 @@
 .unit {
     background-color: antiquewhite;
     padding: 10px;
+    margin: 5px;
+    height: 150px;
+    width: 200px;
+    border-radius: 5px;
+    border: 2px goldenrod;
+}
+
+.stat-box {
+    background-color: teal;
+    padding: 3px;
 }

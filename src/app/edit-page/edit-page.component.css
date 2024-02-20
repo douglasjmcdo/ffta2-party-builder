@@ -2,10 +2,12 @@
     background-color: palevioletred;
 }
 
-.sprite-list-wrapper {
+
+/* CLASS/JOB BUTTON COLLECTIONS */
+.list-wrapper {
     display: flex;
     flex-wrap: wrap;
-    max-width: 80vw;
+    max-width: 85vw;
     background-color:brown;
     margin-left: 10px;
     padding: 3px;
@@ -34,4 +36,15 @@
     width: 36px;
     height: 36px;
     object-fit: contain;
+}
+
+/* ABILITY BUTTON COLLECTIONS */
+
+.a-entry {
+    width: 130px;
+    margin: 2px;
+}
+
+.selected-a-entry {
+    background-color: yellow;
 }

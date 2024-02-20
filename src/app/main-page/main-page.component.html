@@ -1,8 +1,10 @@
 <div class="mainpagewrapper">
    <p>main-page works!</p>
 
-   <app-unit *ngFor="let unit of this.ps.partyarray" [data]="unit">
-   </app-unit>
+   <div class="unit-list">
+      <app-unit *ngFor="let unit of this.ps.partyarray" [data]="unit">
+      </app-unit>
+   </div>
    <button (click)="testNameChange()">Change name to Luso</button>
    <button (click)="testAddPartyMember()">ADD PARTY MEMBER</button>
 </div>
