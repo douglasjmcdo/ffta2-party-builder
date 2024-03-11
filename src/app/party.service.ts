@@ -12,10 +12,11 @@ export class PartyService {
 
   private idcount: number = 0;
   isloaded = false;
+  loaderror = false;
 
-  CLASSDATA: any;
-  RABILITYDATA: any;
-  PABILITYDATA: any;
+  CLASSDATA: Array<any> = [];
+  RABILITYDATA: Array<any> = [];
+  PABILITYDATA: Array<any> = [];
 
   readonly RACENUMS = [-1, 0, 1, 2, 3, 4, 5, 6];
   readonly RACENAMES = ["Hume", "Bangaa", "Nu Mou", "Viera", "Moogle", "Gria", "Seeq"];
@@ -28,22 +29,41 @@ export class PartyService {
 
   async initializeAPI() {
     let data = await fetch('/api/read-classdata');
-    data.json().then(r => {
-      this.CLASSDATA = r.res.rows;
-      this.initDefaultRaceSprites();
-    });
+    console.log("COMPARE", data);
+    if (data.status == 200) {
+      data.json().then(r => {
+        console.log("r", r);
+        this.CLASSDATA = r.res.rows;
+        this.initDefaultRaceSprites();
+      });
+    } else {
+      this.loaderror = true;
+    }
     console.log("API read_classdata called");
-    data = await fetch('/api/read-abilitydata?Reactive=true');
-    data.json().then(r => {
-      this.RABILITYDATA = r.res.rows;      
-    });
-    data = await fetch('/api/read-abilitydata?Reactive=false');
-    data.json().then(r => {
-      this.PABILITYDATA = r.res.rows;      
-    });
-    console.log("API read_abilitydata called");
 
+    data = await fetch('/api/read-abilitydata?Reactive=true');
+    if (data.status == 200) {
+      data.json().then(r => {
+        console.log("r2");
+
+        this.RABILITYDATA = r.res.rows;      
+      });
+    } else {
+      this.loaderror = true;
+    }
+
+    data = await fetch('/api/read-abilitydata?Reactive=false');
+    if (data.status == 200) {
+      data.json().then(r => {
+        this.PABILITYDATA = r.res.rows;   
+        console.log("r3", r.res.rows, this.PABILITYDATA[0], this.RABILITYDATA[0], this.CLASSDATA[0]);
+    
+      });
+    } else {
+      this.loaderror = true;
+    }
     this.isloaded = true;
+    console.log("API read_abilitydata called", this.isloaded, this.loaderror);
   }
 
   //RETURNS THE REQUESTED PARTY MEMBER. RETURNS FIRST PM IF ID IS OOB
@@ -66,7 +86,7 @@ export class PartyService {
       unitid: -1,
       sortorder: -1,
       isdefault: true,
-      unitname: "default",
+      unitname: "Unit",
       race: -1,
       impliedrace: [-1],
       primaryclass: "",
@@ -107,6 +127,7 @@ export class PartyService {
       //if race is already assigned, then unassign
     case "race":
       {
+        console.log("SERVICE:", id, vartochange, newvalue)
         let numval: number = +newvalue;
         if (numval > 6 || numval <  -1) {
           console.error('race number is out of bounds -1 to 6', numval)
@@ -185,6 +206,11 @@ export class PartyService {
       //if already assigned, unassign
     case "rability":
       {
+        if (newvalue == "") {
+          this.partyarray[id].rability = "";
+          break;
+        }
+
         let rab = this.RABILITYDATA.find((ab: {abilityname: string; }) => ab.abilityname === newvalue);
         if (!rab) {
           console.error("rability not included in list", newvalue);
@@ -202,6 +228,11 @@ export class PartyService {
       //if already assigned, unassign
     case "pability":
       {
+        if (newvalue == "") {
+          this.partyarray[id].pability = "";
+          break;
+        }
+
         let pab = this.PABILITYDATA.find((ab: {abilityname: string; }) => ab.abilityname === newvalue);
         if (!pab) {
           console.error("pability not included in list", newvalue);
@@ -236,33 +267,46 @@ export class PartyService {
 
   //GIVEN CLASSNAME, RETURN ENTRY FROM CLASSDATA
   getXClassInfo(classname: string) {
-    if (classname == "") { return undefined };
     return this.CLASSDATA?.find((job: {classname: string;}) => job.classname === classname);
   }
 
   //GIVEN CLASSNAME, RETURN VIABLE RACES IN AN ARRAY OF STRINGS
   getClassViableRaces(classname: string) {
-    return this.CLASSDATA?.find((job: {classname: string; }) =>
+    let data = this.CLASSDATA?.find((job: {classname: string; }) =>
       job.classname === classname
-    ).viableraces.split(",");
+    )
+    if (data) {
+      return data.viableraces.split(",");
+    }
+    return undefined;
   }
 
   //GIVEN ABILITY AND REACTIVE BOOL, GET VIABLE RACES IN AN ARRAY OF STRINGS
   getAbilityViableRaces(abilityname: string, reactive: boolean) {
+    let data = {viableraces: ''};
     if (reactive) {
-      return this.RABILITYDATA?.find((job: {abilityname: string; }) =>
+      data = this.RABILITYDATA?.find((job: {abilityname: string; }) =>
         job.abilityname === abilityname
-      ).viableraces.split(",");
+      )
     } else {
-      return this.PABILITYDATA?.find((job: {abilityname: string; }) =>
+      data = this.PABILITYDATA?.find((job: {abilityname: string; }) =>
         job.abilityname === abilityname
-      ).viableraces.split(",");
+      )
     }
+    if (data != undefined && data?.viableraces != '') {
+      return data.viableraces.split(",");
+    }
+    return undefined;
   }
 
   //GIVEN RACE, GET NAME OF CLASS FOR DEFAULTSPRITE
   getDefaultSpriteForRace(race: number) {
-    if (race==-1) {return "Null"};
+    if (race > 6 || race < -1) {
+      return undefined;
+    }
+    else if (race==-1) {
+      return "Null";
+    };
     return this.CLASSDATA?.find((job: {defaultspriteforrace: number}) =>
       job.defaultspriteforrace === race
     ).classname;

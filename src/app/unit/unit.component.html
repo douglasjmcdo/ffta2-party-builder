@@ -1,14 +1,23 @@
 <div class="unit">
-    <div> {{data.unitname }} {{data.unitid}} {{this.ps.RACENAMES[data.race]}} </div>
-    <img 
-    class="unit-sprite" 
-    alt="SPRITE TBD" 
-    src="{{this.data.changetracker | selectSprite:this.data:this?.priclassentry}}">
-    <div class="stat-box">
-        <div> A=> {{data.primaryclass }}</div>
-        <div> A=> {{data.secondaryclass }}</div>
-        <div> R=7 {{data.rability }}</div>
-        <div> P^ {{data.pability }}</div>
+    <div class="unit-header">
+        <div class="sprite-box">
+            <img 
+                class="unit-sprite" 
+                alt="{{ this?.priclassentry }}" 
+                src="{{this.data.changetracker | selectSprite:this.data:this?.priclassentry}}"
+            >
+        </div>
+        <div> {{data.unitname }} {{data.unitid}} <span *ngIf="data.race != -1"> -- {{this.ps.RACENAMES[data.race]}}</span> </div>
     </div>
-    <a routerLink={{editurl}}>EDIT {{ data.unitid }} </a>
+    <div class="stat-box">
+        <div> A→ {{data.primaryclass }}</div>
+        <div> A→ {{data.secondaryclass }}</div>
+        <div> R↰ {{data.rability }}</div>
+        <div> P↑ {{data.pability }}</div>
+    </div>
+    <div class="unit-footer">
+        <button [routerLink]=[editurl]>Edit</button>
+        <button class="dangerous-button" (click)="deleteUnit()">Delete</button>
+
+    </div>
 </div>

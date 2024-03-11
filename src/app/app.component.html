@@ -1,7 +1,15 @@
 <main class="main">
-  <h1 class="content">
-    {{ title }} : {{ partyname }}
-  </h1>
+  <div class="headerbar">
+    <h1 class="title">
+      {{ title }} : 
+      <span class="clanname" [hidden]="pnchange" (click)="activatePNForm()">{{ pnameForm.value.pname }}</span> 
+      <form class="clannameform" [hidden]="!pnchange" [formGroup]="pnameForm" (submit)="submitPNForm()">
+        <input #pnform id="pnchange-form" type="text" formControlName="pname">
+        <!-- {{ pnform.focus() }} -->
+      </form>
+    </h1>
+  </div>
+  
   <router-outlet />
 </main>
 

@@ -1,0 +1,22 @@
+.title {
+    font-family: Highway Gothic, sans-serif;
+    display: flex;
+}
+
+.headerbar {
+    max-width: 100vw;
+    color:white;
+    padding: 5px 20px;
+    background-color: #153542;
+    border-bottom: 5px solid #102137;
+}
+
+.clanname {
+    text-decoration: underline;
+    padding-left: 15px;
+}
+
+.clanname:hover {
+    color:yellow;
+    cursor: pointer;
+}

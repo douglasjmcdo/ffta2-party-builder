@@ -1,14 +1,52 @@
 .unit {
-    background-color: antiquewhite;
+    background-color: #C49C61;
     padding: 10px;
     margin: 5px;
     height: 150px;
-    width: 200px;
+    width: 180px;
     border-radius: 5px;
-    border: 2px goldenrod;
+}
+
+.unit-header {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding-bottom: 5px;
+  }
+
+.sprite-box {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    justify-content: center;
+    align-items: end;
 }
 
 .stat-box {
-    background-color: teal;
+    background-color: #ffffff77;
     padding: 3px;
+    margin-bottom: 5px;
+}
+
+.unit-footer {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding-bottom: 5px;
+}
+
+.unit-footer button {
+    padding: 3px;
+    width: 70px;
+    margin: 5px;
+    border-radius: 7px;
+    border: none;
+}
+
+.dangerous-button {
+    background-color: lightpink;
+}
+
+.dangerous-button:hover {
+    background-color: palevioletred;
 }

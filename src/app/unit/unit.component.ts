@@ -19,7 +19,7 @@ export class UnitComponent {
     isdefault: true,
 
     //this collection is the 'unit data':
-    unitname: "default",
+    unitname: "Unit",
     race: -1,
     impliedrace: [-1],
     primaryclass: "",
@@ -124,6 +124,10 @@ export class UnitComponent {
 
   fetchSprite() {
     //TODO: using race and primaryclass, fetch a sprite to represent the unit
+  }
+
+  deleteUnit() {
+    console.log("DELETE?");
   }
 
 }

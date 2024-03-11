@@ -1,80 +1,106 @@
 <div class="editpagewrapper">
-    <p>edit-page works! this is edit page for unit {{routed_id }}</p>
-    <a routerLink="/main">Take me back to main!</a>
-
-    <h2>RACES</h2>
-    <div class="list-wrapper">
-        <div class="sprite-wrapper" *ngFor="let entry of this.unit_data['impliedrace']">
-            <button 
-            class="r-entry sprite"  
-            title="{{this.ps.defaultsprites[entry + 1]}}"
-            [ngClass]="{'selected-sprite' : this.unit_data.race === entry }"
-            (click)="this.ps.updatePartyMember(+routed_id, 'race', entry.toString())"
-            >
-            <!-- note: this assumes defaultsprites is in the same order as unit_data['impliedrace'] & race-exclusive -->
-                <img class="btn-img" alt="{{this.ps.defaultsprites[entry + 1]}}"
-                src='../../assets/class_sprites/FFTA2-{{this.ps.defaultsprites[entry + 1]}}Sprite.webp'
-                >
-            </button>
-        </div>
+    <div class="edit-header">
+        <button [routerLink]="['/main']"> Return to Main </button>
+        <p>Editing: unit {{routed_id }}</p>
     </div>
 
-    <h2>PRIMARY CLASSES</h2>
-    <div class="list-wrapper">
-        <div class="sprite-wrapper" *ngFor="let entry of this.priclassfilter">
-            <button 
-            class="c-entry sprite"
-            title="{{entry['classname']}}"
-            [ngClass]="{'selected-sprite' : this.unit_data.primaryclass === entry['classname'] }"
-            (click)="this.ps.updatePartyMember(+routed_id, 'priclass', entry['classname'])"
-            >
-                <img
-                class="btn-img" alt="{{entry['classname']}}"
-                src="{{this.unit_data.changetracker | selectSprite:this.unit_data:entry}}">
-            </button>
-        </div>
+    <div class="form-container">
+        <form [formGroup]="formGroup" >
+            <h2>RACES</h2>
+            <div class="list-wrapper">
+                <div class="sprite-wrapper" *ngFor="let entry of this.unit_data['impliedrace']" >
+                    <input type="radio" formControlName="race" name="race" [value]="entry" 
+                    (change)="this.ps.updatePartyMember(+routed_id, 'race', entry.toString())"/>
+                    <label (click)="this.ps.updatePartyMember(+routed_id, 'race', entry.toString())">
+                        <div 
+                        class="r-entry sprite" 
+                        title="{{this.ps.defaultsprites[entry + 1]}}"
+                        [ngClass]="{'selected-sprite' : this.unit_data.race === entry }"
+                        >
+                            <img class="btn-img" alt="{{this.ps.defaultsprites[entry + 1]}}"
+                            src='../../assets/class_sprites/FFTA2-{{this.ps.defaultsprites[entry + 1]}}Sprite.webp'
+                            >
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <h2>PRIMARY CLASSES</h2>
+            <div class="list-wrapper">
+                <div class="sprite-wrapper" *ngFor="let entry of this.priclassfilter" >
+                    <input type="radio" formControlName="priclass" name="priclass" [value]="entry['classname']" 
+                    (change)="this.ps.updatePartyMember(+routed_id, 'priclass', entry['classname'])"/>
+                    <label (click)="this.ps.updatePartyMember(+routed_id, 'priclass', entry['classname'])">
+                        <div 
+                        class="r-entry sprite" 
+                        title="{{entry['classname']}}"
+                        [ngClass]="{'selected-sprite' : this.unit_data.primaryclass === entry['classname'] }"
+                        >
+                            <img
+                            class="btn-img" alt="{{entry['classname']}}"
+                            src="{{this.unit_data.changetracker | selectSprite:this.unit_data:entry}}"
+                            >
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            
+            <h2>SECONDARY CLASSES</h2>
+            <div class="list-wrapper">
+                <div class="sprite-wrapper" *ngFor="let entry of this.secclassfilter" >
+                    <input type="radio" formControlName="secclass" name="secclass" [value]="entry['classname']" 
+                    (change)="this.ps.updatePartyMember(+routed_id, 'secclass', entry['classname'])"/>
+                    <label (click)="this.ps.updatePartyMember(+routed_id, 'secclass', entry['classname'])">
+                        <div 
+                        class="r-entry sprite" 
+                        title="{{entry['classname']}}"
+                        [ngClass]="{'selected-sprite' : this.unit_data.secondaryclass === entry['classname'] }"
+                        >
+                            <img
+                            class="btn-img" alt="{{entry['classname']}}"
+                            src="{{this.unit_data.changetracker | selectSprite:this.unit_data:entry}}"
+                            >
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            
+            <h2>REACTION ABILITIES</h2>
+            <div class="list-wrapper">
+                <div class="sprite-wrapper" *ngFor="let entry of this.rabfilter" >
+                    <input type="radio" formControlName="rab" name="rab" [value]="entry['abilityname']" 
+                    (change)="this.ps.updatePartyMember(+routed_id, 'rability', entry['abilityname'])"/>
+                    <label (click)="this.ps.updatePartyMember(+routed_id, 'rability', entry['abilityname'])">
+                        <div 
+                        class="a-entry" 
+                        title="{{entry['abilityname']}}"
+                        [ngClass]="{'selected-a-entry' : this.unit_data.rability === entry['abilityname'] }"
+                        >
+                            {{ entry['abilityname'] }}
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <h2>PASSIVE ABILITIES</h2>
+            <div class="list-wrapper">
+                <div class="sprite-wrapper" *ngFor="let entry of this.pabfilter" >
+                    <input type="radio" formControlName="pab" name="pab" [value]="entry['abilityname']" 
+                    (change)="this.ps.updatePartyMember(+routed_id, 'pability', entry['abilityname'])"/>
+                    <label (click)="this.ps.updatePartyMember(+routed_id, 'pability', entry['abilityname'])">
+                        <div 
+                        class="a-entry" 
+                        title="{{entry['abilityname']}}"
+                        [ngClass]="{'selected-a-entry' : this.unit_data.pability === entry['abilityname'] }"
+                        >
+                            {{ entry['abilityname'] }}
+                        </div>
+                    </label>
+                </div>
+            </div>
+        </form>
     </div>
-
-    <h2>SECONDARY CLASSES</h2>
-    <div class="list-wrapper">
-        <div class="sprite-wrapper" *ngFor="let entry of this.secclassfilter">
-            <button 
-            class="c-entry sprite"
-            title="{{entry['classname']}}"
-            [ngClass]="{'selected-sprite' : this.unit_data.secondaryclass === entry['classname'] }" 
-            (click)="this.ps.updatePartyMember(+routed_id, 'secclass', entry['classname'])"
-            >
-                <img
-                class="btn-img" alt="{{entry['classname']}}"
-                src="{{this.unit_data.changetracker | selectSprite:this.unit_data:entry}}">
-            </button>
-        </div>    
-    </div>
-
-    <h2>REACTION ABILITIES</h2>
-    <div class="list-wrapper">
-        <button 
-        class="a-entry"  *ngFor="let entry of this.rabfilter"
-        title="{{entry['abilityname']}}"
-        [ngClass]="{'selected-a-entry' : this.unit_data.rability === entry['abilityname'] }"
-        (click)="this.ps.updatePartyMember(+routed_id, 'rability', entry['abilityname'])"
-        >
-            {{ entry['abilityname'] }}
-        </button>
-    </div>
-    
-    <h2>PASSIVE ABILITIES</h2>
-    <div class="list-wrapper" >
-        <button 
-        class="a-entry" *ngFor="let entry of this.pabfilter"
-        title="{{entry['abilityname']}}"
-        [ngClass]="{'selected-a-entry' : this.unit_data.pability === entry['abilityname'] }"
-        (click)="this.ps.updatePartyMember(+routed_id, 'pability', entry['abilityname'])"
-        >
-            {{ entry['abilityname'] }}
-        </button>
-    </div>
-
-
-
+    <!-- end formcontainer -->
 </div>

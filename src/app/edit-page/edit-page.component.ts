@@ -5,13 +5,15 @@ import { CommonModule } from '@angular/common';
 import { Unitdata } from '../unitdata';
 import { Observable, Subscription, of } from 'rxjs';
 import { SelectSpritePipe } from '../select-sprite.pipe';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+
 //note: crit quicken is only available to penelo for viera... does that require any extra logic?
 
 
 @Component({
   selector: 'app-edit-page',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, CommonModule, SelectSpritePipe],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, CommonModule, ReactiveFormsModule, SelectSpritePipe],
   templateUrl: './edit-page.component.html',
   styleUrl: './edit-page.component.css'
 })
@@ -24,7 +26,7 @@ export class EditPageComponent {
     isdefault: true,
 
     //this collection is the 'unit data':
-    unitname: "default",
+    unitname: "Unit",
     race: -1,
     impliedrace: [-1],
     primaryclass: "",
@@ -33,6 +35,15 @@ export class EditPageComponent {
     pability: "",
     changetracker: -1,
   }
+
+  formGroup = new FormGroup({
+    race: new FormControl(),
+    priclass: new FormControl(),
+    secclass: new FormControl(),
+    rab: new FormControl(),
+    pab: new FormControl()
+  });
+
   priclassfilter;
   secclassfilter;
   racefilter;
@@ -59,6 +70,15 @@ export class EditPageComponent {
       this.filterSec();
       this.filterPability();
       this.filterRability();
+
+      //make sure formgroup values are updated to match if necessary
+      this.formGroup.patchValue({
+        race: this.unit_data.race, 
+        priclass: this.unit_data.primaryclass,
+        secclass: this.unit_data.secondaryclass,
+        rab: this.unit_data.rability,
+        pab: this.unit_data.pability
+      });
     })
   }
 

@@ -19,7 +19,7 @@ DATABASE: VERCEL POSTGRESQL
         string movename
         string description
         string elemental
-        string[] classes (i think this caps at 2 or 3?)
+        string[] classes (i think this caps at 2 or 3)
 
 
 Structural design:
@@ -115,3 +115,10 @@ EDIT PAGE:
 
 
 
+PAGES:
+main -> edit
+    actions from main page: add party member, save party to csv. import from txt/csv? TSV
+    stretch: save to hall of fame?
+optional:
+analysis page?
+hall of fame page?

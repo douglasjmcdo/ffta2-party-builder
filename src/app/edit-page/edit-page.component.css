@@ -1,5 +1,27 @@
 .editpagewrapper {
-    background-color: palevioletred;
+    max-height: 85vh;
+}
+
+.edit-header {
+    display: flex;
+    color: white;
+    margin: 5px;
+}
+
+.edit-header button {
+    margin: 10px;
+}
+
+.edit-header p {
+    margin-left: 15px;
+}
+
+.form-container {
+    max-height: 73vh;
+    padding: 5px;
+    background-color: #C49C61;
+    overflow: scroll;
+    border: solid 4px #6f4227;
 }
 
 
@@ -7,8 +29,7 @@
 .list-wrapper {
     display: flex;
     flex-wrap: wrap;
-    max-width: 85vw;
-    background-color:brown;
+    max-width: 90vw;
     margin-left: 10px;
     padding: 3px;
 }
@@ -16,8 +37,8 @@
 .sprite-wrapper {
     padding: 1px;
     margin: 2px;
-    border-radius: 15px;
-    background-color: #d0ff3722;
+    border-radius: 19px;
+    background-color: #154f7d;
 }
 
 .sprite {
@@ -26,23 +47,45 @@
     border-radius: 15px;
     background-color: #d0ff3722;
     border: none;
+    
+    width: 36px;
+    height: 36px;
+    display: flex;
+    justify-content: center;
+    align-items: end;
+}
+
+.sprite-wrapper:hover .sprite:not(.selected-sprite) {
+    background-color: #d0ff3752;
 }
 
 .selected-sprite {
     background-color: yellow;
 }
 
-.btn-img {
-    width: 36px;
-    height: 36px;
-    object-fit: contain;
+input {
+    top:-20px;
+    left: 0px;
+    position: absolute;
+}
+
+input:focus + label > div {
+    border: 2px solid white;
 }
 
 /* ABILITY BUTTON COLLECTIONS */
 
 .a-entry {
-    width: 130px;
+    width: 140px;
     margin: 2px;
+    padding: 2px 8px;
+    border-radius: 15px;
+    background-color: #d0ff3722;
+}
+
+
+.a-entry:hover:not(.selected-a-entry) {
+    background-color: #d0ff3752;
 }
 
 .selected-a-entry {
