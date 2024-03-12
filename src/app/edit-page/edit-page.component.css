@@ -21,7 +21,8 @@
     padding: 5px;
     background-color: #C49C61;
     overflow: scroll;
-    border: solid 4px #6f4227;
+    border-width: 5px 0px;
+    border-style: solid;
 }
 
 

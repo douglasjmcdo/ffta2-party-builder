@@ -33,8 +33,6 @@ export class AppComponent {
   activatePNForm() {
     this.pnchange = true;
     this.pnform.nativeElement.focus();
-
-    console.log("FOCUSED ON ", this.pnform.nativeElement);
     //todo: nativeelement is working. why is the focus not working? :(
   }
 

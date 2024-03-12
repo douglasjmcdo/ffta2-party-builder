@@ -108,6 +108,8 @@ export class PartyService {
 
   //UPDATES DATA OF ID'D PARTY MEMBER
   updatePartyMember (id: number, vartochange: string, newvalue: string) {
+    let index = this.partyarray.findIndex((el) => el.unitid === id);
+
     //update partymember's variables.
     switch(vartochange) {
 
@@ -118,8 +120,8 @@ export class PartyService {
           console.error("name is longer than 16 characters", newvalue);
           break;
         }
-        this.partyarray[id].unitname = newvalue;
-        this.partyarray[id].changetracker++;
+        this.partyarray[index].unitname = newvalue;
+        this.partyarray[index].changetracker++;
         break;
       };
 
@@ -133,13 +135,13 @@ export class PartyService {
           console.error('race number is out of bounds -1 to 6', numval)
           break;
         }
-        else if (numval == this.partyarray[id].race) {
-          this.partyarray[id].race = -1;
+        else if (numval == this.partyarray[index].race) {
+          this.partyarray[index].race = -1;
         } 
         else {
-          this.partyarray[id].race = numval;
+          this.partyarray[index].race = numval;
         }
-        this.partyarray[id].changetracker++;
+        this.partyarray[index].changetracker++;
         break;
       }
 
@@ -151,7 +153,7 @@ export class PartyService {
         for (let i of newvalue.split(',')) {
           newnumarray.push(+i);
         }
-        this.partyarray[id].impliedrace = newnumarray;
+        this.partyarray[index].impliedrace = newnumarray;
         return;
       }
       
@@ -165,17 +167,17 @@ export class PartyService {
           console.error("priclass not included in list", newvalue);
           break;
         }
-        else if (this.partyarray[id].primaryclass == newvalue) {
-          this.partyarray[id].primaryclass = "";
+        else if (this.partyarray[index].primaryclass == newvalue) {
+          this.partyarray[index].primaryclass = "";
         }
-        else if (this.partyarray[id].secondaryclass== newvalue) {
-          this.partyarray[id].secondaryclass = "";
-          this.partyarray[id].primaryclass = newvalue;
+        else if (this.partyarray[index].secondaryclass== newvalue) {
+          this.partyarray[index].secondaryclass = "";
+          this.partyarray[index].primaryclass = newvalue;
         } 
         else {
-          this.partyarray[id].primaryclass = newvalue;
+          this.partyarray[index].primaryclass = newvalue;
         }
-        this.partyarray[id].changetracker++;
+        this.partyarray[index].changetracker++;
         break;
       }
 
@@ -189,16 +191,16 @@ export class PartyService {
           console.error("secclass not included in list", newvalue);
           break;
         }
-        else if (this.partyarray[id].secondaryclass == newvalue) {
-          this.partyarray[id].secondaryclass = "";
+        else if (this.partyarray[index].secondaryclass == newvalue) {
+          this.partyarray[index].secondaryclass = "";
         }
-        else if (this.partyarray[id].primaryclass == newvalue && newvalue != "") {
+        else if (this.partyarray[index].primaryclass == newvalue && newvalue != "") {
           console.error("new class is already assigned to priclass", newvalue);
           break;
         } else {
-          this.partyarray[id].secondaryclass = newvalue;
+          this.partyarray[index].secondaryclass = newvalue;
         }
-        this.partyarray[id].changetracker++;
+        this.partyarray[index].changetracker++;
         break;
       }
 
@@ -207,7 +209,7 @@ export class PartyService {
     case "rability":
       {
         if (newvalue == "") {
-          this.partyarray[id].rability = "";
+          this.partyarray[index].rability = "";
           break;
         }
 
@@ -215,12 +217,12 @@ export class PartyService {
         if (!rab) {
           console.error("rability not included in list", newvalue);
           break;
-        } else if (this.partyarray[id].rability == newvalue) {
-          this.partyarray[id].rability = "";
+        } else if (this.partyarray[index].rability == newvalue) {
+          this.partyarray[index].rability = "";
         } else {
-          this.partyarray[id].rability = newvalue;
+          this.partyarray[index].rability = newvalue;
         }
-        this.partyarray[id].changetracker++;
+        this.partyarray[index].changetracker++;
         break;
       }
 
@@ -229,7 +231,7 @@ export class PartyService {
     case "pability":
       {
         if (newvalue == "") {
-          this.partyarray[id].pability = "";
+          this.partyarray[index].pability = "";
           break;
         }
 
@@ -237,12 +239,12 @@ export class PartyService {
         if (!pab) {
           console.error("pability not included in list", newvalue);
           break;
-        }else if (this.partyarray[id].pability == newvalue) {
-          this.partyarray[id].pability = "";
+        }else if (this.partyarray[index].pability == newvalue) {
+          this.partyarray[index].pability = "";
         } else {
-          this.partyarray[id].pability = newvalue;
+          this.partyarray[index].pability = newvalue;
         }
-        this.partyarray[id].changetracker++;
+        this.partyarray[index].changetracker++;
         break;
       }
     }

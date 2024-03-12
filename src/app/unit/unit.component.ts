@@ -31,6 +31,7 @@ export class UnitComponent {
 
   editurl = "/edit/";
   priclassentry: any;
+  deletemodal: HTMLDialogElement = document.querySelector("dialog")!;
   
   constructor(public ps: PartyService) {}
 
@@ -122,12 +123,11 @@ export class UnitComponent {
 
   //END GETTERS/SETTERS
 
-  fetchSprite() {
-    //TODO: using race and primaryclass, fetch a sprite to represent the unit
+  deleteUnit() {
+    this.ps.deletePartyMember(this.getID());
+    //this.deletemodal.close();
   }
 
-  deleteUnit() {
-    console.log("DELETE?");
-  }
+  // todo: make unitname change clickerform like for partyname
 
 }

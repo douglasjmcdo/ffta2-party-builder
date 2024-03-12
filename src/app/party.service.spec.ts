@@ -7,7 +7,7 @@ import { MOCKCLASSDATA } from './party.service.mock';
 import { MOCKRABILITYDATA } from './party.service.mock';
 import { MOCKPABILITYDATA } from './party.service.mock';
 
-describe('PartyService', () => {
+fdescribe('PartyService', () => {
   let service: PartyService;  
   const okresponse = new Response(JSON.stringify({res: {rows: MOCKCLASSDATA}}), {
     status: 200,

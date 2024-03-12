@@ -17,7 +17,20 @@
     </div>
     <div class="unit-footer">
         <button [routerLink]=[editurl]>Edit</button>
-        <button class="dangerous-button" (click)="deleteUnit()">Delete</button>
-
+        <button class="dangerous-button" (click)="deletemodal.showModal()">Delete</button>
     </div>
 </div>
+
+<dialog #deletemodal>
+    <div class="dialog">
+        <p>Delete {{data.unitname}} {{data.unitid}}?</p>
+        <form method="dialog" (click)="deletemodal.close()">
+        <button autofocus>
+                Nevermind
+            </button>
+            <button class="dangerous-button" (click)="deleteUnit()">
+                Delete
+            </button>
+        </form>
+    </div>
+</dialog>

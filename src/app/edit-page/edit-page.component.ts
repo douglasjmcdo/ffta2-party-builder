@@ -63,7 +63,9 @@ export class EditPageComponent {
   ngOnInit() {
     //whenever the service data changes, the subscriber will auto-update unit_data
     this.subscriber = this.ps.partyarraysub$.subscribe(data => {
-      this.unit_data = data[+this.routed_id];
+      let index = data.findIndex((el) => el.unitid === +this.routed_id);
+      this.unit_data = data[index];
+      //data[+this.routed_id];
       //if any relevant unit data has changed, rerun filters
       this.filterRace();
       this.filterPri();
