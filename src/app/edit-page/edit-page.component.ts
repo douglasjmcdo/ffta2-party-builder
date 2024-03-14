@@ -23,7 +23,6 @@ export class EditPageComponent {
   unit_data: Unitdata = {
     unitid: -1,
     sortorder: -1,
-    isdefault: true,
 
     //this collection is the 'unit data':
     unitname: "Unit",
@@ -65,7 +64,7 @@ export class EditPageComponent {
     this.subscriber = this.ps.partyarraysub$.subscribe(data => {
       let index = data.findIndex((el) => el.unitid === +this.routed_id);
       this.unit_data = data[index];
-      //data[+this.routed_id];
+
       //if any relevant unit data has changed, rerun filters
       this.filterRace();
       this.filterPri();
@@ -101,21 +100,56 @@ export class EditPageComponent {
       this.priclassfilter = this.filterClassByDefinedRace();
     }
     //else, filter on any implied races
-    //optional: also remove secclass from priclass pool?
      else {
       this.priclassfilter = this.filterClassByImpliedRace(true);
     }
+
+    //if secondary class is assigned, remove both agent and secclass from priclass list
+    if (this?.unit_data['secondaryclass'] != "") {
+      this.removeClassXFromFilter(true, "Agent");
+      this.removeClassXFromFilter(true, this?.unit_data['secondaryclass']);
+    }
+
+    //hurdy and montblanc cannot be chocobo knights. remove from list
+    if (this?.unit_data['secondaryclass'] == "Bard" || 
+        this?.unit_data.unitname == "Montblanc" ||
+        this?.unit_data.unitname == "Hurdy") {
+      this.removeClassXFromFilter(true, "Chocobo Knight");
+    }
+    this.filterClassByUniquePresents(true);
+    
   }
 
   filterSec() {
     this.secclassfilter = this.ps.CLASSDATA;
-    //todo: always remove AGENT class bc he cant double class lol
+
     if (this?.unit_data['race'] != -1) {
       this.secclassfilter = this.filterClassByDefinedRace();
     }
     else {
       this.secclassfilter = this.filterClassByImpliedRace(false);
     }
+
+    //if primary class is agent, no secondary classes are available. whoops!
+    if (this?.unit_data['primaryclass'] == "Agent") {
+      this.secclassfilter = [this.ps.getXClassInfo("")];
+    } 
+    //if primary class is assigned, remove from secclass pool
+    else if (this?.unit_data['primaryclass'] != "") {
+      this.removeClassXFromFilter(false, this?.unit_data['primaryclass']);
+    }
+    
+    //hurdy and montblanc cannot be chocobo knights. remove from list
+    if (this?.unit_data['primaryclass'] == "Bard" || 
+        this?.unit_data.unitname == "Montblanc" ||
+        this?.unit_data.unitname == "Hurdy") {
+      this.removeClassXFromFilter(false, "Chocobo Knight");
+    }
+
+    //agent can never be a secondary class. remove from list
+    this.removeClassXFromFilter(false, "Agent");
+    this.filterClassByUniquePresents(false);
+
   }
 
   filterRace() {
@@ -147,6 +181,7 @@ export class EditPageComponent {
     else {
       this.pabfilter = this.filterAbilityByImpliedRace(false);
     }
+    //optional: add filter for unique classes?
   } 
   
   filterRability() {
@@ -182,6 +217,42 @@ export class EditPageComponent {
     return this.ps.CLASSDATA.filter((job: {viableraces: string; }) => {
       return this.givenRaceListAndEntryReturnTrueIfMatch(viableraces, job.viableraces);
     });
+  }
+
+  filterClassByUniquePresents(primary: boolean) {
+    
+    //if this unit is a unique class, remove all other unique classes
+    let isunique = this.ps.UNIQUECHARS.find((el) => el.name === this?.unit_data.unitname);
+    if (isunique) {
+      for (let unit of this.ps.UNIQUECHARS) {
+        if (unit != isunique && unit.class != "NONE") {
+          this.removeClassXFromFilter(primary, unit.class);
+        }
+      }
+      //todo: exception for same class, or no? Hrmm
+    } 
+    //else, if any unique character classes are already present, 
+    //AND this unit is not them, then remove those options from the list
+    else {
+      let present = this.ps.filterUniquePresentClasses();
+      for (let unit of present) {
+        if (unit.name != this?.unit_data.unitname && unit.class != "NONE") {
+          this.removeClassXFromFilter(primary, unit.class);
+        }
+      }
+    }
+  }
+
+  //input: primary bool, class to remove. output: none. splices class x out of indicated filter. if class dne, does nothing
+  removeClassXFromFilter(primary: boolean, xclass: string) {
+    let ind = this.getIndexOfClassX(primary, xclass);
+    if (ind != -1) {
+      if (primary) {
+        this.priclassfilter.splice(ind, 1);
+      } else {
+        this.secclassfilter.splice(ind, 1);
+      }
+    }
   }
 
   //input: classname. output: racefilter, filtered further to only viable races
@@ -286,6 +357,17 @@ export class EditPageComponent {
     }
 
     return viableraces;
+  }
+
+  //input: primary bool, class to get index of. output: index of classx in given filter
+  getIndexOfClassX(primary: boolean, xclass: string) {
+    let ind: any;
+    if (primary) {
+      ind = this.priclassfilter.indexOf(this.ps.getXClassInfo(xclass));
+    } else {
+      ind = this.secclassfilter.indexOf(this.ps.getXClassInfo(xclass));
+    }
+    return ind;
   }
 
 }

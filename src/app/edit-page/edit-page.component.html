@@ -1,7 +1,7 @@
 <div class="editpagewrapper">
     <div class="edit-header">
         <button [routerLink]="['/main']"> Return to Main </button>
-        <p>Editing: unit {{routed_id }}</p>
+        <p>Editing: {{ this.unit_data['unitname'] }}</p>
     </div>
 
     <div class="form-container">
@@ -14,10 +14,10 @@
                     <label (click)="this.ps.updatePartyMember(+routed_id, 'race', entry.toString())">
                         <div 
                         class="r-entry sprite" 
-                        title="{{this.ps.defaultsprites[entry + 1]}}"
+                        title="{{this.ps.RACENAMES[entry] ?? 'Undefined Race'}}"
                         [ngClass]="{'selected-sprite' : this.unit_data.race === entry }"
                         >
-                            <img class="btn-img" alt="{{this.ps.defaultsprites[entry + 1]}}"
+                            <img class="btn-img" alt="{{this.ps.RACENAMES[entry] ?? 'Undefined Race'}}"
                             src='../../assets/class_sprites/FFTA2-{{this.ps.defaultsprites[entry + 1]}}Sprite.webp'
                             >
                         </div>
@@ -27,17 +27,18 @@
 
             <h2>PRIMARY CLASSES</h2>
             <div class="list-wrapper">
-                <div class="sprite-wrapper" *ngFor="let entry of this.priclassfilter" >
+                <div class="sprite-wrapper"  [ngClass]="{'uniqcsprite':entry['IsUnique']}"
+                *ngFor="let entry of this.priclassfilter" >
                     <input type="radio" formControlName="priclass" name="priclass" [value]="entry['classname']" 
                     (change)="this.ps.updatePartyMember(+routed_id, 'priclass', entry['classname'])"/>
                     <label (click)="this.ps.updatePartyMember(+routed_id, 'priclass', entry['classname'])">
                         <div 
                         class="r-entry sprite" 
-                        title="{{entry['classname']}}"
-                        [ngClass]="{'selected-sprite' : this.unit_data.primaryclass === entry['classname'] }"
+                        title="{{entry['classname'] || 'Undefined Class'}}"
+                        [ngClass]="{'selected-sprite' : this.unit_data.primaryclass === entry['classname']}"
                         >
                             <img
-                            class="btn-img" alt="{{entry['classname']}}"
+                            class="btn-img" alt="{{entry['classname'] || 'Undefined Class'}}"
                             src="{{this.unit_data.changetracker | selectSprite:this.unit_data:entry}}"
                             >
                         </div>
@@ -48,17 +49,18 @@
             
             <h2>SECONDARY CLASSES</h2>
             <div class="list-wrapper">
-                <div class="sprite-wrapper" *ngFor="let entry of this.secclassfilter" >
+                <div class="sprite-wrapper"  [ngClass]="{'uniqcsprite':entry['IsUnique']}"
+                *ngFor="let entry of this.secclassfilter">
                     <input type="radio" formControlName="secclass" name="secclass" [value]="entry['classname']" 
                     (change)="this.ps.updatePartyMember(+routed_id, 'secclass', entry['classname'])"/>
                     <label (click)="this.ps.updatePartyMember(+routed_id, 'secclass', entry['classname'])">
                         <div 
                         class="r-entry sprite" 
-                        title="{{entry['classname']}}"
-                        [ngClass]="{'selected-sprite' : this.unit_data.secondaryclass === entry['classname'] }"
+                        title="{{entry['classname'] || 'Undefined Class'}}"
+                        [ngClass]="{'selected-sprite' : this.unit_data.secondaryclass === entry['classname']}"
                         >
                             <img
-                            class="btn-img" alt="{{entry['classname']}}"
+                            class="btn-img" alt="{{entry['classname'] || 'Undefined Class'}}"
                             src="{{this.unit_data.changetracker | selectSprite:this.unit_data:entry}}"
                             >
                         </div>

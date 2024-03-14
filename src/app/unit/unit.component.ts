@@ -1,14 +1,16 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input,  ElementRef, ViewChild } from '@angular/core';
 import { PRIMARY_OUTLET, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { FormControl, FormGroup, ReactiveFormsModule  } from '@angular/forms';
 import { NgIf } from '@angular/common';
 import { Unitdata } from '../unitdata';
 import { PartyService } from '../party.service';
 import { SelectSpritePipe } from '../select-sprite.pipe';
+import { A11yModule } from '@angular/cdk/a11y';
 
 @Component({
   selector: 'app-unit',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, NgIf, SelectSpritePipe],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, NgIf, SelectSpritePipe, ReactiveFormsModule, A11yModule ],
   templateUrl: './unit.component.html',
   styleUrl: './unit.component.css'
 })
@@ -16,7 +18,6 @@ export class UnitComponent {
   @Input() data: Unitdata = {
     unitid: -1,
     sortorder: -1,
-    isdefault: true,
 
     //this collection is the 'unit data':
     unitname: "Unit",
@@ -29,6 +30,13 @@ export class UnitComponent {
     changetracker: -1,
   }
 
+  @ViewChild('nform') nform!:ElementRef;
+  
+  namechange = false;
+  nameForm = new FormGroup({
+    name: new FormControl("Unit ")
+  });
+
   editurl = "/edit/";
   priclassentry: any;
   deletemodal: HTMLDialogElement = document.querySelector("dialog")!;
@@ -39,9 +47,12 @@ export class UnitComponent {
     console.log("INIT");
     this.editurl += this.data.unitid.toString();
     this.priclassentry = this.ps.getXClassInfo(this.data.primaryclass);
+    if (this.data.unitname == "Unit") {
+      this.setUnitName("Unit " + this.data.unitid.toString());
+    }
   }
 
-  // GETTERS AND SETTERS
+  // GETTERS AND SETTERS - most of these are unused. should they be removed?
 
   setID(newid: number) {
     this.data.unitid = newid;
@@ -59,18 +70,16 @@ export class UnitComponent {
     return this.data.sortorder;
   }
 
-  setDefault(newdef: boolean) {
-    this.data.isdefault = newdef;
-  }
-
-  getDefault() {
-    return this.data.isdefault;
-  }
-
   // UNIT DATA GETTERS/SETTERS
 
+  //updates unitname AND nameform if nameform is not already aligned
   setUnitName(newname: string) {
-    this.data.unitname = newname;
+    this.ps.updatePartyMember(this.data.unitid, "name", newname);
+
+    //if the update goes through and form no longer matches, realign form to match new name
+    if (this.data.unitname != this.nameForm.value.name) {
+      this.nameForm.patchValue({name: newname});
+    }
   }
 
   getUnitName() {
@@ -128,6 +137,20 @@ export class UnitComponent {
     //this.deletemodal.close();
   }
 
-  // todo: make unitname change clickerform like for partyname
+  //NAME FORM
+  activateNameForm() {
+    this.namechange = true;
+    this.nform.nativeElement.select();
+  }
+
+  submitNameForm() {
+    this.namechange = false;
+    //check for invalid/empty string and return to default
+    if (!this.nameForm.value.name) {
+      this.nameForm.patchValue({name: "Unit " + this.data.unitid.toString()})
+    }
+    //update input data to match form
+    this.setUnitName(this.nameForm.value.name!);
+  }
 
 }

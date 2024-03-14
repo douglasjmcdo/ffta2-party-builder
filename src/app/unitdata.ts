@@ -1,7 +1,6 @@
 export interface Unitdata {
     unitid: number,
     sortorder: number,
-    isdefault: boolean,
 
     //this collection is the 'unit data':
     unitname: string,

@@ -4,88 +4,105 @@ let MOCKCLASSDATA: Array<Object> = [
         {
           "classname": "",
           "defaultspriteforrace": null,
-          "viableraces": "0,1,2,3,4,5,6"
+          "viableraces": "0,1,2,3,4,5,6",
+          "isunique": false
         },
         {
           "classname": "Parivir",
           "defaultspriteforrace": null,
-          "viableraces": "0"
+          "viableraces": "0",
+          "isunique": false
         },
         {
           "classname": "Blue Mage",
           "defaultspriteforrace": null,
-          "viableraces": "0"
+          "viableraces": "0",
+          "isunique": false
         },
         {
           "classname": "Ninja",
           "defaultspriteforrace": null,
-          "viableraces": "0"
+          "viableraces": "0",
+          "isunique": false
         },
         {
           "classname": "Paladin",
           "defaultspriteforrace": null,
-          "viableraces": "0"
+          "viableraces": "0",
+          "isunique": false
         },
         {
           "classname": "Fighter",
           "defaultspriteforrace": null,
-          "viableraces": "0"
+          "viableraces": "0",
+          "isunique": false
         },
         {
           "classname": "Soldier",
           "defaultspriteforrace": 0,
-          "viableraces": "0"
+          "viableraces": "0",
+          "isunique": false
         },
         {
           "classname": "White Mage",
           "defaultspriteforrace": null,
-          "viableraces": "0,2,3"
+          "viableraces": "0,2,3",
+          "isunique": false
         },
         {
           "classname": "Black Mage",
           "defaultspriteforrace": null,
-          "viableraces": "0,2,4"
+          "viableraces": "0,2,4",
+          "isunique": false
         },
         {
           "classname": "Thief",
           "defaultspriteforrace": null,
-          "viableraces": "0,4"
+          "viableraces": "0,4",
+          "isunique": false
         },
         {
           "classname": "White Monk",
           "defaultspriteforrace": 1,
-          "viableraces": "1"
+          "viableraces": "1",
+          "isunique": false
         },
         {
           "classname": "Master Monk",
           "defaultspriteforrace": null,
-          "viableraces": "1"
+          "viableraces": "1",
+          "isunique": false
         },
         {
           "classname": "Beastmaster",
           "defaultspriteforrace": 2,
-          "viableraces": "2"
+          "viableraces": "2",
+          "isunique": false
         },
         
         {
             "classname": "Fencer",
             "defaultspriteforrace": 3,
-            "viableraces": "3"
+            "viableraces": "3",
+            "isunique": false
         }, 
         {
             "classname": "Animist",
             "defaultspriteforrace": 4,
-            "viableraces": "4"
+            "viableraces": "4",
+            "isunique": false
         },
         {
             "classname": "Raptor",
             "defaultspriteforrace": 5,
-            "viableraces": "5"
+            "viableraces": "5",
+            "isunique": false
         },
         {
             "classname": "Ranger",
             "defaultspriteforrace": 6,
-            "viableraces": "6"
+            "viableraces": "6",
+            "isunique": false
         },
       ];
 

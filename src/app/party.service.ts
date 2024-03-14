@@ -6,6 +6,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 })
 export class PartyService {
 
+  partyname = "Your Party";
   partyarray: Unitdata[] = [];
   private partyarraysub = new BehaviorSubject<Unitdata[]>([]);
   partyarraysub$ = this.partyarraysub.asObservable();
@@ -20,6 +21,18 @@ export class PartyService {
 
   readonly RACENUMS = [-1, 0, 1, 2, 3, 4, 5, 6];
   readonly RACENAMES = ["Hume", "Bangaa", "Nu Mou", "Viera", "Moogle", "Gria", "Seeq"];
+  UNIQUECHARS = [
+    {name: "Luso", race: 0, class: "NONE", present: false},
+    {name: "Adelle", race: 0, class: "Heritor", present: false},
+    {name: "Cid", race: 1, class: "NONE", present: false},
+    {name: "Vaan", race: 0, class: "Sky Pirate", present: false},
+    {name: "Penelo", race: 3, class: "Dancer", present: false},
+    {name: "Al-Cid", race: 0, class: "Agent", present: false},
+    {name: "Frimelda", race: 0, class: "NONE", present: false},
+    {name: "Hurdy", race: 4, class: "Bard", present: false},
+    {name: "Montblanc", race: 4, class: "NONE", present: false},
+  ];
+
   defaultsprites: Array<string> = [];
 
   constructor() { 
@@ -66,6 +79,10 @@ export class PartyService {
     console.log("API read_abilitydata called", this.isloaded, this.loaderror);
   }
 
+  updatePartyName(newname: string) {
+    this.partyname = newname;
+  }
+
   //RETURNS THE REQUESTED PARTY MEMBER. RETURNS FIRST PM IF ID IS OOB
   getPartyMemberById(id: number) {
     let correctunit = this.partyarray.find((el) => el.unitid === id);
@@ -85,7 +102,6 @@ export class PartyService {
     let newunit: Unitdata = {
       unitid: -1,
       sortorder: -1,
-      isdefault: true,
       unitname: "Unit",
       race: -1,
       impliedrace: [-1],
@@ -120,16 +136,40 @@ export class PartyService {
           console.error("name is longer than 16 characters", newvalue);
           break;
         }
+        
+        //if name is on unique list, then confirm no dupes
+        let ind = this.UNIQUECHARS.findIndex((el) => el.name == newvalue);
+        if (ind != -1) {
+          //confirm no dupes (excluding this pre-existing unit)
+          let dupes = this.partyarray.find((unit: {unitname: string; unitid: number }) => 
+            unit.unitname == newvalue && unit.unitid != id
+          );
+          if (dupes) {
+            console.error(newvalue, " already exists in your party!");
+            //todo: make error popup to inform user?
+            return "Error";
+          }
+          //no duplicates: we are good to make this unit!
+          this.UNIQUECHARS[ind].present = true;
+        }
+
+        //before reassigning, check if we're LEAVING a unique char: if so, mark them as not present
+        let oldind = this.UNIQUECHARS.findIndex((el) => el.name == this.partyarray[index].unitname);
+        if (oldind != -1) {
+          this.UNIQUECHARS[oldind].present = false;
+        }
+
+        //ok NOW you can change the name
         this.partyarray[index].unitname = newvalue;
         this.partyarray[index].changetracker++;
         break;
+
       };
 
       //race must be an int between -1 and 6
       //if race is already assigned, then unassign
     case "race":
       {
-        console.log("SERVICE:", id, vartochange, newvalue)
         let numval: number = +newvalue;
         if (numval > 6 || numval <  -1) {
           console.error('race number is out of bounds -1 to 6', numval)
@@ -163,11 +203,35 @@ export class PartyService {
     case "priclass":
       {
         let job = this.CLASSDATA.find((job: { classname: string; }) => job.classname === newvalue);
+        let uniqind = this.UNIQUECHARS.findIndex((el) => el.class == newvalue);
+
         if (!job) {
           console.error("priclass not included in list", newvalue);
           break;
         }
-        else if (this.partyarray[index].primaryclass == newvalue) {
+        else if (uniqind != -1) {
+          //assigning a unique class: check that it or a named unit doesnt already exist
+          let dupes = this.partyarray.find((unit: {unitname: string; primaryclass: string }) => 
+            unit.unitname == newvalue && unit.primaryclass != this.UNIQUECHARS[uniqind].class
+          );
+          if (dupes) {
+            console.error(this.UNIQUECHARS[uniqind].name, "already exists in your party!");
+            //todo: make error popup to inform user?
+            return "Error";
+          }
+
+          //if UNassigning a unique character via their unique class, then revert their name
+          let prevuniq = this.UNIQUECHARS.findIndex((el) => el.class == this.partyarray[index].primaryclass);
+          if (prevuniq == uniqind) {
+            this.partyarray[index].primaryclass = "";
+            this.updatePartyMember(id, "name", "Unit " + id);
+            this.partyarray[index].changetracker++;
+            break;
+          }
+        }
+
+        //normal cases: newvalue is not a unique character class
+        if (this.partyarray[index].primaryclass == newvalue) {
           this.partyarray[index].primaryclass = "";
         }
         else if (this.partyarray[index].secondaryclass== newvalue) {
@@ -177,7 +241,9 @@ export class PartyService {
         else {
           this.partyarray[index].primaryclass = newvalue;
         }
+
         this.partyarray[index].changetracker++;
+        this.updateNameForUniqueClasses(id, newvalue);
         break;
       }
 
@@ -187,11 +253,33 @@ export class PartyService {
     case "secclass":
       {
         let job = this.CLASSDATA.find((job: { classname: string; }) => job.classname === newvalue);
+        let uniqind = this.UNIQUECHARS.findIndex((el) => el.class == newvalue);
+
         if (!job) {
           console.error("secclass not included in list", newvalue);
           break;
         }
-        else if (this.partyarray[index].secondaryclass == newvalue) {
+        else if (uniqind != -1) {
+          //assigning a unique class: check that it or a named unit doesnt already exist
+          let dupes = this.partyarray.find((unit: {unitname: string; secondaryclass: string }) => 
+            unit.unitname == newvalue && unit.secondaryclass != this.UNIQUECHARS[uniqind].class
+          );  
+          if (dupes) {
+            console.error(this.UNIQUECHARS[uniqind].name, "already exists in your party!");
+            //todo: make error popup to inform user?
+            return "Error";
+          }
+
+          //if UNassigning a unique character via their unique class, then revert their name
+          let prevuniq = this.UNIQUECHARS.findIndex((el) => el.class == this.partyarray[index].secondaryclass);
+          if (prevuniq == uniqind) {
+            this.partyarray[index].secondaryclass = "";
+            this.updatePartyMember(id, "name", "Unit " + id);
+            this.partyarray[index].changetracker++;
+            break;
+          }
+        }
+        if (this.partyarray[index].secondaryclass == newvalue) {
           this.partyarray[index].secondaryclass = "";
         }
         else if (this.partyarray[index].primaryclass == newvalue && newvalue != "") {
@@ -201,6 +289,7 @@ export class PartyService {
           this.partyarray[index].secondaryclass = newvalue;
         }
         this.partyarray[index].changetracker++;
+        this.updateNameForUniqueClasses(id, newvalue);
         break;
       }
 
@@ -322,4 +411,37 @@ export class PartyService {
     }
   }
 
+  updateNameForUniqueClasses(id: number, classname: string) {
+    let unit = this.getPartyMemberById(id);
+    if (!unit) {
+      console.error(id, "Unit DNE");
+      return;
+    }
+
+    //if the classname is on the list of uniquechars, update unit name accordingly
+    let char_ind = this.UNIQUECHARS.findIndex((el) => el.class == classname);
+    if (char_ind != -1) {
+      this.updatePartyMember(id, "name", this.UNIQUECHARS[char_ind].name);
+      this.UNIQUECHARS[char_ind].present = true;   
+    } 
+    //else if unitname IS on the list but class impliedraces != unitrace, reset name 
+    else {
+      let unit_ind = this.UNIQUECHARS.findIndex((el) => el.name == unit!.unitname);
+      if (unit_ind != -1) {
+        //unitname IS on the list of unique chars: check if new classname has any overlap at all
+        //if no overlap between class and character, remove character name
+        let viableraces = this.getClassViableRaces(classname);
+        if (!viableraces.includes(this.UNIQUECHARS[unit_ind].race.toString())) {
+          this.updatePartyMember(id, "name", "Unit " + unit.unitid);
+          this.UNIQUECHARS[unit_ind].present = false;
+        }
+      }
+    }
+  }
+
+  filterUniquePresentClasses() {
+    return this.UNIQUECHARS.filter((unit: { present: boolean; }) => 
+      { return unit.present; }
+    );
+  }
 }

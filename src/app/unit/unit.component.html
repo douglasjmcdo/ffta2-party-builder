@@ -1,13 +1,22 @@
 <div class="unit">
     <div class="unit-header">
         <div class="sprite-box">
-            <img 
+            <img
                 class="unit-sprite" 
                 alt="{{ this?.priclassentry }}" 
-                src="{{this.data.changetracker | selectSprite:this.data:this?.priclassentry}}"
+                src="{{this.data.changetracker | selectSprite:this.data}}"
             >
+            <!-- todo: think about how you want to handle race without classes and classes withour races forreallll this isnt the way -->
         </div>
-        <div> {{data.unitname }} {{data.unitid}} <span *ngIf="data.race != -1"> -- {{this.ps.RACENAMES[data.race]}}</span> </div>
+        <div>
+            <span class="name" [hidden]="namechange" (click)="activateNameForm()">{{ this.data.unitname }}</span> 
+            <form class="nameform" [hidden]="!namechange" [formGroup]="nameForm" (submit)="submitNameForm()"
+                [cdkTrapFocusAutoCapture]="namechange" [cdkTrapFocus]="namechange"
+            >
+                <input #nform class="namechange-form" type="text" formControlName="name" maxlength="16"/>
+            </form>
+        </div>
+        
     </div>
     <div class="stat-box">
         <div> A→ {{data.primaryclass }}</div>

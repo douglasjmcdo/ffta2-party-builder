@@ -122,3 +122,31 @@ main -> edit
 optional:
 analysis page?
 hall of fame page?
+
+
+UNIQUE CLASS RESTRICTIONS:
+can only have 1 of each of the following classes:
+-bard 
+        -cannot be chocobo knight
+        -must be named hurdy
+-agent
+        -can only be primary class
+        -cannot have a secondary class
+-sky pirate
+        -must be named vaan
+-dancer
+        -must be named penelo
+-heritor
+        -must be named adelle
+additionally:
+-named character montblanc cannot be chocobo knight
+
+UNIT SPRITE LOGIC, in order, such that UNIT SPRITE can also indicate RACE:
+-if named on UNIQUECHARS list, use custom sprite
+-else if classed OR subclassed as heritor, agent, sky pirate, bard, or dancer, use that sprite
+-else
+    -if race is not defined or implied to 1 or less, use NULL
+    -else:
+        -if primary class, use priclass + race
+        -if secclass, use secclass + race
+        -else use default sprite for race

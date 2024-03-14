@@ -22,6 +22,10 @@
     align-items: end;
 }
 
+.namechange-form {
+    max-width: 100px;
+}
+
 .stat-box {
     background-color: #ffffff77;
     padding: 5px;

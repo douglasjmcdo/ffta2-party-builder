@@ -4,18 +4,17 @@ import { UnitComponent } from './unit/unit.component';
 import { PartyService } from './party.service';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-
+import { A11yModule } from '@angular/cdk/a11y';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, ReactiveFormsModule, CommonModule],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, ReactiveFormsModule, CommonModule, A11yModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
 export class AppComponent {
   title = 'ffta2-party-builder';
-  partyname = "Your Party";
 
   pnchange = false;
   pnameForm = new FormGroup({
@@ -32,13 +31,16 @@ export class AppComponent {
 
   activatePNForm() {
     this.pnchange = true;
-    this.pnform.nativeElement.focus();
-    //todo: nativeelement is working. why is the focus not working? :(
+    this.pnform.nativeElement.select();
   }
 
   submitPNForm() {
     this.pnchange = false;
     this.pnameForm.value.pname ?? "Your Party";
+    if (!this.pnameForm.value.pname) {
+      this.pnameForm.patchValue({pname: "Your Party"})
+    }
+    this.ps.updatePartyName(this.pnameForm.value.pname!);
   }
 
 }

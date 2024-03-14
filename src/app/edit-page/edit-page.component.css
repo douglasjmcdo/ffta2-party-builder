@@ -60,6 +60,11 @@
     background-color: #d0ff3752;
 }
 
+/* unique character class sprite:  */
+.uniqcsprite {
+    background-color:#2d7d15;
+}
+
 .selected-sprite {
     background-color: yellow;
 }
