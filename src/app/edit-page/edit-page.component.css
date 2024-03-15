@@ -25,6 +25,10 @@
     border-style: solid;
 }
 
+.main-form {
+    padding: 0px 20px 75px 20px;
+}
+
 
 /* CLASS/JOB BUTTON COLLECTIONS */
 .list-wrapper {
@@ -96,4 +100,29 @@ input:focus + label > div {
 
 .selected-a-entry {
     background-color: yellow;
+}
+
+/* NAME FORM */
+.unitname-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.name {
+    text-decoration: underline;
+    padding-left: 5px;
+}
+
+.name:hover {
+    color:yellow;
+    cursor: pointer;
+}
+.nameform {
+    padding-left: 5px;
+}
+.nameform-input {
+    max-width: 100px;
+    position:relative;
+    top:auto;
+    left:auto;
 }

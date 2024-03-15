@@ -13,16 +13,16 @@
             <form class="nameform" [hidden]="!namechange" [formGroup]="nameForm" (submit)="submitNameForm()"
                 [cdkTrapFocusAutoCapture]="namechange" [cdkTrapFocus]="namechange"
             >
-                <input #nform class="namechange-form" type="text" formControlName="name" maxlength="16"/>
+                <input #nform class="nameform-input" type="text" formControlName="name" maxlength="16"/>
             </form>
         </div>
         
     </div>
     <div class="stat-box">
-        <div> A→ {{data.primaryclass }}</div>
-        <div> A→ {{data.secondaryclass }}</div>
-        <div> R↰ {{data.rability }}</div>
-        <div> P↑ {{data.pability }}</div>
+        <div> <span class="stat-arrow">A→</span> {{data.primaryclass }}</div>
+        <div> <span class="stat-arrow">A→</span> {{data.secondaryclass }}</div>
+        <div> <span class="stat-arrow">R ↰</span> {{data.rability }}</div>
+        <div> <span class="stat-arrow">P ↑</span> {{data.pability }}</div>
     </div>
     <div class="unit-footer">
         <button [routerLink]=[editurl]>Edit</button>

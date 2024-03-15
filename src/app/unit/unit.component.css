@@ -2,7 +2,7 @@
     background-color: #C49C61;
     padding-top: 5px;
     margin: 5px;
-    width: 180px;
+    width: 190px;
     border-radius: 15px;
     border: 3px solid black;
 }
@@ -22,7 +22,16 @@
     align-items: end;
 }
 
-.namechange-form {
+.name {
+    text-decoration: underline;
+}
+
+.name:hover {
+    color:yellow;
+    cursor: pointer;
+}
+
+.nameform-input {
     max-width: 100px;
 }
 
@@ -30,6 +39,11 @@
     background-color: #ffffff77;
     padding: 5px;
     margin-bottom: 3px;
+}
+
+.stat-arrow {
+    width: 30px;
+    display:inline-block;
 }
 /* todo: pad out stat info so it's aligned despite arrow differences */
 

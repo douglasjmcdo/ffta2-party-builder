@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ElementRef, ViewChild } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { PartyService } from '../party.service';
 import { CommonModule } from '@angular/common';
@@ -6,6 +6,8 @@ import { Unitdata } from '../unitdata';
 import { Observable, Subscription, of } from 'rxjs';
 import { SelectSpritePipe } from '../select-sprite.pipe';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { A11yModule } from '@angular/cdk/a11y';
+
 
 //note: crit quicken is only available to penelo for viera... does that require any extra logic?
 
@@ -13,7 +15,7 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 @Component({
   selector: 'app-edit-page',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, CommonModule, ReactiveFormsModule, SelectSpritePipe],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, CommonModule, ReactiveFormsModule, SelectSpritePipe, A11yModule],
   templateUrl: './edit-page.component.html',
   styleUrl: './edit-page.component.css'
 })
@@ -41,6 +43,13 @@ export class EditPageComponent {
     secclass: new FormControl(),
     rab: new FormControl(),
     pab: new FormControl()
+  });
+
+  @ViewChild('nform') nform!:ElementRef;
+
+  namechange = false;
+  nameForm = new FormGroup({
+    name: new FormControl("Unit ")
   });
 
   priclassfilter;
@@ -80,6 +89,10 @@ export class EditPageComponent {
         rab: this.unit_data.rability,
         pab: this.unit_data.pability
       });
+      
+      if (this.unit_data.unitname != this.nameForm.value.name) {
+        this.nameForm.patchValue({name: this.unit_data.unitname});
+      }
     })
   }
 
@@ -221,9 +234,16 @@ export class EditPageComponent {
 
   filterClassByUniquePresents(primary: boolean) {
     
-    //if this unit is a unique class, remove all other unique classes
+    //if this unit is a unique character AND not a unique class, remove all other unique classes 
     let isunique = this.ps.UNIQUECHARS.find((el) => el.name === this?.unit_data.unitname);
-    if (isunique) {
+    let classisunique = null;
+    if (primary) {
+      classisunique = this.ps.UNIQUECHARS.find((el) => el.class === this?.unit_data.primaryclass);
+    } else {
+      classisunique = this.ps.UNIQUECHARS.find((el) => el.class === this?.unit_data.secondaryclass);
+    }
+
+    if (isunique && !classisunique) {
       for (let unit of this.ps.UNIQUECHARS) {
         if (unit != isunique && unit.class != "NONE") {
           this.removeClassXFromFilter(primary, unit.class);
@@ -368,6 +388,33 @@ export class EditPageComponent {
       ind = this.secclassfilter.indexOf(this.ps.getXClassInfo(xclass));
     }
     return ind;
+  }
+
+  //namechange form controls
+  
+  //updates unitname AND nameform if nameform is not already aligned
+  setUnitName(newname: string) {
+    this.ps.updatePartyMember(this.unit_data.unitid, "name", newname);
+
+    //if the update goes through and form no longer matches, realign form to match new name
+    if (this.unit_data.unitname != this.nameForm.value.name) {
+      this.nameForm.patchValue({name: newname});
+    }
+  }
+
+  activateNameForm() {
+    this.namechange = true;
+    this.nform.nativeElement.select();
+  }
+
+  submitNameForm() {
+    this.namechange = false;
+    //check for invalid/empty string and return to default
+    if (!this.nameForm.value.name) {
+      this.nameForm.patchValue({name: "Unit " + this.unit_data.unitid.toString()})
+    }
+    //update input data to match form
+    this.setUnitName(this.nameForm.value.name!);
   }
 
 }

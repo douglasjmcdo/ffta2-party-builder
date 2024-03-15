@@ -149,19 +149,27 @@ export class PartyService {
             //todo: make error popup to inform user?
             return "Error";
           }
-          //no duplicates: we are good to make this unit!
+          //no duplicates: we are good to create this unique unit! 
+          //test: does updating implied race feel better?
+          if (this.UNIQUECHARS[ind].race != this.partyarray[index].race) {
+            this.updatePartyMember(id, "race", this.UNIQUECHARS[ind].race.toString());
+          }
           this.UNIQUECHARS[ind].present = true;
         }
 
-        //before reassigning, check if we're LEAVING a unique char: if so, mark them as not present
         let oldind = this.UNIQUECHARS.findIndex((el) => el.name == this.partyarray[index].unitname);
-        if (oldind != -1) {
-          this.UNIQUECHARS[oldind].present = false;
-        }
-
-        //ok NOW you can change the name
         this.partyarray[index].unitname = newvalue;
         this.partyarray[index].changetracker++;
+
+        //after reassigning, check if we were LEAVING a unique char: if so, mark them as not present
+        if (oldind != -1) {
+          this.UNIQUECHARS[oldind].present = false;
+          //also if new assignment is not unique, AND default race matches the old assignment, then clear default race
+          if (ind == -1 && this.partyarray[index].race == this.UNIQUECHARS[oldind].race) {
+            this.updatePartyMember(id, "race", "-1");
+          }
+        }
+
         break;
 
       };
@@ -170,16 +178,24 @@ export class PartyService {
       //if race is already assigned, then unassign
     case "race":
       {
+        let ind = this.UNIQUECHARS.findIndex((el) => el.name == this.partyarray[index].unitname);
+
         let numval: number = +newvalue;
         if (numval > 6 || numval <  -1) {
           console.error('race number is out of bounds -1 to 6', numval)
           break;
         }
-        else if (numval == this.partyarray[index].race) {
+
+        if (numval == this.partyarray[index].race) {
           this.partyarray[index].race = -1;
         } 
         else {
           this.partyarray[index].race = numval;
+        }
+        
+        if (ind != -1) {
+          //if changing race on a unique character, then reset their name before ending
+          this.updatePartyMember(id, "name", "Unit " + id);
         }
         this.partyarray[index].changetracker++;
         break;
@@ -204,6 +220,7 @@ export class PartyService {
       {
         let job = this.CLASSDATA.find((job: { classname: string; }) => job.classname === newvalue);
         let uniqind = this.UNIQUECHARS.findIndex((el) => el.class == newvalue);
+        let prevuniq = this.UNIQUECHARS.findIndex((el) => el.class == this.partyarray[index].primaryclass);
 
         if (!job) {
           console.error("priclass not included in list", newvalue);
@@ -221,7 +238,6 @@ export class PartyService {
           }
 
           //if UNassigning a unique character via their unique class, then revert their name
-          let prevuniq = this.UNIQUECHARS.findIndex((el) => el.class == this.partyarray[index].primaryclass);
           if (prevuniq == uniqind) {
             this.partyarray[index].primaryclass = "";
             this.updatePartyMember(id, "name", "Unit " + id);
@@ -240,6 +256,14 @@ export class PartyService {
         } 
         else {
           this.partyarray[index].primaryclass = newvalue;
+        }
+
+        //edgecase: if previous assignment was al-cid, but is no longer, then wipe his name
+        if (prevuniq != -1 &&
+          this.UNIQUECHARS[prevuniq].name == "Al-Cid" && 
+          prevuniq != uniqind) {
+          this.updatePartyMember(id, "name", "Unit " + id);
+          this.partyarray[index].changetracker++;
         }
 
         this.partyarray[index].changetracker++;

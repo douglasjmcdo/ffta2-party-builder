@@ -1,11 +1,18 @@
 <div class="editpagewrapper">
     <div class="edit-header">
         <button [routerLink]="['/main']"> Return to Main </button>
-        <p>Editing: {{ this.unit_data['unitname'] }}</p>
+        <div class="unitname-wrapper">Editing:
+            <span class="name" [hidden]="namechange" (click)="activateNameForm()">{{ this.unit_data['unitname'] }}</span> 
+            <form class="nameform" [hidden]="!namechange" [formGroup]="nameForm" (submit)="submitNameForm()"
+                [cdkTrapFocusAutoCapture]="namechange" [cdkTrapFocus]="namechange"
+            >
+                <input #nform class="nameform-input" type="text" formControlName="name" maxlength="16"/>
+            </form>
+        </div>
     </div>
 
     <div class="form-container">
-        <form [formGroup]="formGroup" >
+        <form [formGroup]="formGroup" class="main-form" >
             <h2>RACES</h2>
             <div class="list-wrapper">
                 <div class="sprite-wrapper" *ngFor="let entry of this.unit_data['impliedrace']" >
