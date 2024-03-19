@@ -2,7 +2,9 @@
     <div class="edit-header">
         <button [routerLink]="['/main']"> Return to Main </button>
         <div class="unitname-wrapper">Editing:
-            <span class="name" [hidden]="namechange" (click)="activateNameForm()">{{ this.unit_data['unitname'] }}</span> 
+            <span class="name" [hidden]="namechange" role="button"
+            (click)="activateNameForm()" (keyup.enter)="activateNameForm()" tabindex="0"
+            >{{ this.unit_data['unitname'] }}</span> 
             <form class="nameform" [hidden]="!namechange" [formGroup]="nameForm" (submit)="submitNameForm()"
                 [cdkTrapFocusAutoCapture]="namechange" [cdkTrapFocus]="namechange"
             >
@@ -16,7 +18,8 @@
             <h2>RACES</h2>
             <div class="list-wrapper">
                 <div class="sprite-wrapper" *ngFor="let entry of this.unit_data['impliedrace']" >
-                    <input type="radio" formControlName="race" name="race" [value]="entry" 
+                    <input type="radio" attr.aria-label="{{this.ps.RACENAMES[entry] ?? 'Undefined Race'}}"
+                    formControlName="race" name="race" [value]="entry" 
                     (change)="this.ps.updatePartyMember(+routed_id, 'race', entry.toString())"/>
                     <label (click)="this.ps.updatePartyMember(+routed_id, 'race', entry.toString())">
                         <div 
@@ -36,7 +39,8 @@
             <div class="list-wrapper">
                 <div class="sprite-wrapper"  [ngClass]="{'uniqcsprite':entry['IsUnique']}"
                 *ngFor="let entry of this.priclassfilter" >
-                    <input type="radio" formControlName="priclass" name="priclass" [value]="entry['classname']" 
+                    <input type="radio" attr.aria-label="{{entry['classname'] || 'Undefined Class'}}"
+                    formControlName="priclass" name="priclass" [value]="entry['classname']" 
                     (change)="this.ps.updatePartyMember(+routed_id, 'priclass', entry['classname'])"/>
                     <label (click)="this.ps.updatePartyMember(+routed_id, 'priclass', entry['classname'])">
                         <div 
@@ -58,7 +62,8 @@
             <div class="list-wrapper">
                 <div class="sprite-wrapper"  [ngClass]="{'uniqcsprite':entry['IsUnique']}"
                 *ngFor="let entry of this.secclassfilter">
-                    <input type="radio" formControlName="secclass" name="secclass" [value]="entry['classname']" 
+                    <input type="radio" attr.aria-label="{{entry['classname'] || 'Undefined Class'}}"
+                    formControlName="secclass" name="secclass" [value]="entry['classname']" 
                     (change)="this.ps.updatePartyMember(+routed_id, 'secclass', entry['classname'])"/>
                     <label (click)="this.ps.updatePartyMember(+routed_id, 'secclass', entry['classname'])">
                         <div 
@@ -79,9 +84,12 @@
             <h2>REACTION ABILITIES</h2>
             <div class="list-wrapper">
                 <div class="sprite-wrapper" *ngFor="let entry of this.rabfilter" >
-                    <input type="radio" formControlName="rab" name="rab" [value]="entry['abilityname']" 
+                    <input type="radio" 
+                    formControlName="rab" name="rab" [value]="entry['abilityname']" 
                     (change)="this.ps.updatePartyMember(+routed_id, 'rability', entry['abilityname'])"/>
-                    <label (click)="this.ps.updatePartyMember(+routed_id, 'rability', entry['abilityname'])">
+                    <label 
+                    (click)="this.ps.updatePartyMember(+routed_id, 'rability', entry['abilityname'])"
+                    >
                         <div 
                         class="a-entry" 
                         title="{{entry['abilityname']}}"
@@ -96,7 +104,8 @@
             <h2>PASSIVE ABILITIES</h2>
             <div class="list-wrapper">
                 <div class="sprite-wrapper" *ngFor="let entry of this.pabfilter" >
-                    <input type="radio" formControlName="pab" name="pab" [value]="entry['abilityname']" 
+                    <input type="radio" 
+                    formControlName="pab" name="pab" [value]="entry['abilityname']" 
                     (change)="this.ps.updatePartyMember(+routed_id, 'pability', entry['abilityname'])"/>
                     <label (click)="this.ps.updatePartyMember(+routed_id, 'pability', entry['abilityname'])">
                         <div 

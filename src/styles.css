@@ -1,5 +1,26 @@
 /* You can add global styles to this file, and also import other style files */
 html {
+    --midblue: #154F7D;
+    --darkblue: #153542;
+
+    --palesand: #E0CAAB;
+    --richsand: #C49C61;
+    --darksand: #BD8339;
+    --darkersand: #9C6222;
+
+    --button: white;
+    --hover: #FCFCA2;
+    /* --danger-button: #FB9591; */
+    --danger-button: #FF7A74;
+    --danger-hover: #FF2C55;
+
+    --darkblue-fg: #3DE6FE80;
+    --darkblue-hover: #3DE6FEC0;
+
+    --uniqentry-bg: #7B461B;
+    --uniqentry-fg: #BD8339a0;
+    --uniqentry-hover: #BD8339;
+
     background-color: #154F7D;
 }
 
@@ -10,4 +31,17 @@ body {
 
 input {
     user-select: all;
+}
+
+button {
+    padding: 3px 10px;
+    min-width: 70px;
+    margin: 5px;
+    border-radius: 7px;
+    border: none;
+    background-color: var(--button);
+}
+
+button:hover {
+    background-color: var(--hover);
 }

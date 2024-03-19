@@ -1,17 +1,27 @@
 <main class="main">
   <div class="headerbar">
     <h1 class="title">
-      {{ title }} : 
-      <span class="clanname" [hidden]="pnchange" (click)="activatePNForm()">{{ pnameForm.value.pname }}</span> 
-      <form class="clannameform" [hidden]="!pnchange" [formGroup]="pnameForm" (submit)="submitPNForm()"
+      FFTA2 Party Builder: 
+      <span class="clanname" [hidden]="pnchange" role="button"
+      (click)="activatePNForm()" (keyup.enter)="activatePNForm()" tabindex="0"
+      >{{ pnameForm.value.pname }}</span> 
+      <form class="clannameform" [hidden]="!pnchange" 
+        [formGroup]="pnameForm" (submit)="submitPNForm()"
         [cdkTrapFocusAutoCapture]="pnchange" [cdkTrapFocus]="pnchange"
       >
-        <input #pnform class="pnchange-form" type="text" formControlName="pname">
-        <!-- {{ pnform.focus() }} -->
+        <label>Enter a new clan name:
+          <input #pnform class="pnchange-form" type="text" formControlName="pname">
+        </label>
       </form>
     </h1>
   </div>
-  
-  <router-outlet />
+
+  <div class="body-container">
+    <router-outlet />
+  </div>
+
+  <footer class="footerbar">
+    <div>Final Fantasy Tactics Advance 2 and all associated graphics © Square Enix 2008 || All code © djmcdo 2024</div>
+  </footer>
 </main>
 

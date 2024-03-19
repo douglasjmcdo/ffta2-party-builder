@@ -9,12 +9,18 @@
             <!-- todo: think about how you want to handle race without classes and classes withour races forreallll this isnt the way -->
         </div>
         <div>
-            <span class="name" [hidden]="namechange" (click)="activateNameForm()">{{ this.data.unitname }}</span> 
+            <span class="name" [hidden]="namechange" role="button"
+            (click)="activateNameForm()" (keyup.enter)="activateNameForm()" tabindex="0"
+            >{{ this.data.unitname }}</span> 
             <form class="nameform" [hidden]="!namechange" [formGroup]="nameForm" (submit)="submitNameForm()"
                 [cdkTrapFocusAutoCapture]="namechange" [cdkTrapFocus]="namechange"
             >
-                <input #nform class="nameform-input" type="text" formControlName="name" maxlength="16"/>
+                <label>Enter a new unit name:
+                    <input #nform class="nameform-input" type="text" 
+                    formControlName="name" maxlength="16"/>
+                </label>
             </form>
+            
         </div>
         
     </div>
@@ -22,7 +28,7 @@
         <div> <span class="stat-arrow">A→</span> {{data.primaryclass }}</div>
         <div> <span class="stat-arrow">A→</span> {{data.secondaryclass }}</div>
         <div> <span class="stat-arrow">R ↰</span> {{data.rability }}</div>
-        <div> <span class="stat-arrow">P ↑</span> {{data.pability }}</div>
+        <div> <span class="stat-arrow">P ↑</span> {{data.pability}}</div>
     </div>
     <div class="unit-footer">
         <button [routerLink]=[editurl]>Edit</button>
@@ -30,15 +36,15 @@
     </div>
 </div>
 
-<dialog #deletemodal>
+<dialog #deletemodal attr.aria-labelledby="delete-arialabel-{{data.unitid}}">
     <div class="dialog">
-        <p>Delete {{data.unitname}} {{data.unitid}}?</p>
-        <form method="dialog" (click)="deletemodal.close()">
+        <h3 id="delete-arialabel-{{data.unitid}}">Delete {{data.unitname}}?</h3>
+        <form method="dialog" [cdkTrapFocus]="true">
         <button autofocus>
                 Nevermind
             </button>
             <button class="dangerous-button" (click)="deleteUnit()">
-                Delete
+                Delete Unit
             </button>
         </form>
     </div>

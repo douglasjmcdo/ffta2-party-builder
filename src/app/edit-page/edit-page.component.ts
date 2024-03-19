@@ -74,13 +74,7 @@ export class EditPageComponent {
       let index = data.findIndex((el) => el.unitid === +this.routed_id);
       this.unit_data = data[index];
 
-      //if any relevant unit data has changed, rerun filters
-      this.filterRace();
-      this.filterPri();
-      this.filterSec();
-      this.filterPability();
-      this.filterRability();
-
+      
       //make sure formgroup values are updated to match if necessary
       this.formGroup.patchValue({
         race: this.unit_data.race, 
@@ -93,6 +87,13 @@ export class EditPageComponent {
       if (this.unit_data.unitname != this.nameForm.value.name) {
         this.nameForm.patchValue({name: this.unit_data.unitname});
       }
+
+      //if any relevant unit data has changed, rerun filters
+      this.filterRace();
+      this.filterPri();
+      this.filterSec();
+      this.filterPability();
+      this.filterRability();
     })
   }
 
@@ -416,6 +417,6 @@ export class EditPageComponent {
     //update input data to match form
     this.setUnitName(this.nameForm.value.name!);
   }
-
+  
 }
 

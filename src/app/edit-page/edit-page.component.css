@@ -4,8 +4,9 @@
 
 .edit-header {
     display: flex;
-    color: white;
-    margin: 5px;
+    background-color: var(--darkersand);
+    color:white;
+    padding: 5px;
 }
 
 .edit-header button {
@@ -17,12 +18,14 @@
 }
 
 .form-container {
-    max-height: 73vh;
+    max-height: calc(100vh - 195px);
     padding: 5px;
-    background-color: #C49C61;
+    /* background-color: #C49C61; */
     overflow: scroll;
-    border-width: 5px 0px;
+    border-width: 3px 0px;
     border-style: solid;
+    border-color: black;
+    color: white;
 }
 
 .main-form {
@@ -43,14 +46,14 @@
     padding: 1px;
     margin: 2px;
     border-radius: 19px;
-    background-color: #154f7d;
+    background-color: var(--darkblue);
 }
 
 .sprite {
     padding: 2px;
     margin: 2px;
     border-radius: 15px;
-    background-color: #d0ff3722;
+    background-color: var(--darkblue-fg);
     border: none;
     
     width: 36px;
@@ -61,16 +64,24 @@
 }
 
 .sprite-wrapper:hover .sprite:not(.selected-sprite) {
-    background-color: #d0ff3752;
+    background-color: var(--darkblue-hover);
 }
 
 /* unique character class sprite:  */
 .uniqcsprite {
-    background-color:#2d7d15;
+    background-color: var(--uniqentry-bg);
 }
 
-.selected-sprite {
-    background-color: yellow;
+.uniqcsprite .sprite:not(.selected-sprite) {
+    background-color: var(--uniqentry-fg);
+}
+.uniqcsprite:hover .sprite:not(.selected-sprite) {
+    background-color: var(--uniqentry-hover);
+}
+
+/* including .sprite to boost specificity over uniqcsprite? */
+.sprite.selected-sprite {
+    background-color: var(--hover);
 }
 
 input {
@@ -90,16 +101,19 @@ input:focus + label > div {
     margin: 2px;
     padding: 2px 8px;
     border-radius: 15px;
-    background-color: #d0ff3722;
+    background-color: #3DE6FE80;
+    color:black;
+    display:inline-block;
 }
 
 
 .a-entry:hover:not(.selected-a-entry) {
-    background-color: #d0ff3752;
+    background-color: #3de6fec0;
 }
 
 .selected-a-entry {
-    background-color: yellow;
+    background-color: var(--hover);
+    color:black;
 }
 
 /* NAME FORM */
@@ -114,8 +128,9 @@ input:focus + label > div {
 }
 
 .name:hover {
-    color:yellow;
+    color: var(--hover);
     cursor: pointer;
+    font-weight: bold;
 }
 .nameform {
     padding-left: 5px;

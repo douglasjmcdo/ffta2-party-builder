@@ -1,17 +1,19 @@
 .unit {
-    background-color: #C49C61;
-    padding-top: 5px;
+    background-color: var(--palesand);
     margin: 5px;
     width: 190px;
     border-radius: 15px;
     border: 3px solid black;
+    overflow: clip;
 }
 
 .unit-header {
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    padding-bottom: 5px;
+    padding: 5px;
+    background-color: var(--darkersand);
+    color: white;
   }
 
 .sprite-box {
@@ -27,8 +29,9 @@
 }
 
 .name:hover {
-    color:yellow;
+    color: var(--hover);
     cursor: pointer;
+    font-weight: bold;
 }
 
 .nameform-input {
@@ -36,7 +39,6 @@
 }
 
 .stat-box {
-    background-color: #ffffff77;
     padding: 5px;
     margin-bottom: 3px;
 }
@@ -54,39 +56,31 @@
     padding-bottom: 3px;
 }
 
-button {
-    padding: 3px;
-    width: 70px;
-    margin: 5px;
-    border-radius: 7px;
-    border: none;
-}
-
 .dangerous-button {
-    background-color: lightpink;
+    background-color: var(--danger-button);
 }
 
 .dangerous-button:hover {
-    background-color: palevioletred;
+    background-color: var(--danger-hover);
+    color: white;
 }
 
 
 /* DELETE MODAL */
 
 dialog {
-    background-color:#C49C61;
+    background-color:var(--richsand);
     border-radius:20px
 }
 
 .dialog {
-    min-width: 200px;
+    min-width: 220px;
     min-height: 100px;
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
     align-items: center;
     
-    background-color: #ffffff77;
+    background-color: var(--palesand);
     border-radius:14px;
 }
 
@@ -96,8 +90,15 @@ dialog p {
 }
 
 dialog button {
-    width: 80px;
+    width: 90px;
     margin: 5px;
+}
+
+label {
+    font-size: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 
