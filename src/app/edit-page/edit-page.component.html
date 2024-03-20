@@ -8,7 +8,10 @@
             <form class="nameform" [hidden]="!namechange" [formGroup]="nameForm" (submit)="submitNameForm()"
                 [cdkTrapFocusAutoCapture]="namechange" [cdkTrapFocus]="namechange"
             >
-                <input #nform class="nameform-input" type="text" formControlName="name" maxlength="16"/>
+                <label class="nameform-label">Enter a new unit name:
+                    <input #nform class="nameform-input" type="text" 
+                    formControlName="name" maxlength="16"/>
+                </label>
             </form>
         </div>
     </div>
@@ -83,16 +86,15 @@
             
             <h2>REACTION ABILITIES</h2>
             <div class="list-wrapper">
-                <div class="sprite-wrapper" *ngFor="let entry of this.rabfilter" >
-                    <input type="radio" 
+                <div class="sprite-wrapper" *ngFor="let entry of this.rabfilter,  let i = index" >
+                    <input type="radio" attr.aria-labelledby="{{i}}-rab"
                     formControlName="rab" name="rab" [value]="entry['abilityname']" 
                     (change)="this.ps.updatePartyMember(+routed_id, 'rability', entry['abilityname'])"/>
-                    <label 
+                    <label id="{{i}}-rab"
                     (click)="this.ps.updatePartyMember(+routed_id, 'rability', entry['abilityname'])"
                     >
                         <div 
                         class="a-entry" 
-                        title="{{entry['abilityname']}}"
                         [ngClass]="{'selected-a-entry' : this.unit_data.rability === entry['abilityname'] }"
                         >
                             {{ entry['abilityname'] }}
@@ -103,14 +105,13 @@
 
             <h2>PASSIVE ABILITIES</h2>
             <div class="list-wrapper">
-                <div class="sprite-wrapper" *ngFor="let entry of this.pabfilter" >
-                    <input type="radio" 
+                <div class="sprite-wrapper" *ngFor="let entry of this.pabfilter, let i = index" >
+                    <input type="radio" attr.aria-labelledby="{{i}}-pab"
                     formControlName="pab" name="pab" [value]="entry['abilityname']" 
                     (change)="this.ps.updatePartyMember(+routed_id, 'pability', entry['abilityname'])"/>
-                    <label (click)="this.ps.updatePartyMember(+routed_id, 'pability', entry['abilityname'])">
+                    <label id="{{i}}-pab" (click)="this.ps.updatePartyMember(+routed_id, 'pability', entry['abilityname'])">
                         <div 
                         class="a-entry" 
-                        title="{{entry['abilityname']}}"
                         [ngClass]="{'selected-a-entry' : this.unit_data.pability === entry['abilityname'] }"
                         >
                             {{ entry['abilityname'] }}
