@@ -2,9 +2,9 @@ import { Component } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { PartyService } from '../party.service';
 import { UnitComponent } from '../unit/unit.component';
-import { BrowserModule } from '@angular/platform-browser';
-import { CommonModule, KeyValuePipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Unitdata } from '../unitdata';
+import { trigger, style, animate, transition } from '@angular/animations';
 
 @Component({
   selector: 'app-main-page',
@@ -13,7 +13,29 @@ import { Unitdata } from '../unitdata';
     //BrowserModule
   ],
   templateUrl: './main-page.component.html',
-  styleUrl: './main-page.component.css'
+  styleUrl: './main-page.component.css',
+  animations: [
+    trigger(
+      'slideInOut', 
+      [
+        transition(
+          ':enter', 
+          [
+            style({ width: 0, opacity: 0 }),
+            animate('.3s ease-out', 
+                    style({ width: "!", opacity: 1 }))
+          ]
+        ),
+        transition(
+          ':leave', 
+          [
+            animate('.3s ease-out', 
+                    style({ width: 0, opacity: 0 }))
+          ]
+        )
+      ]
+    )
+  ]
 })
 export class MainPageComponent {
   

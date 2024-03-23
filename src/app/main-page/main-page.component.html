@@ -12,7 +12,8 @@
       </div>
 
       <div class="unit-list">
-         <app-unit *ngFor="let unit of this.ps.partyarray" [data]="unit">
+         <app-unit *ngFor="let unit of this.ps.partyarray" [data]="unit" 
+         [@slideInOut]>
          </app-unit>
       </div>
    </div>

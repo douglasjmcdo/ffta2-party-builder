@@ -150,10 +150,25 @@ export class PartyService {
             return "Error";
           }
           //no duplicates: we are good to create this unique unit! 
-          //test: does updating implied race feel better?
+          //first, update unit race to match unique character
           if (this.UNIQUECHARS[ind].race != this.partyarray[index].race) {
             this.updatePartyMember(id, "race", this.UNIQUECHARS[ind].race.toString());
           }
+          //next, if unit has any classes or abilities that conflict with that race, unassign them
+          if (!this.classCanBeRace(this.partyarray[index].primaryclass, this.UNIQUECHARS[ind].race)) {
+            this.updatePartyMember(id, "priclass", "");
+          }
+          if (!this.classCanBeRace(this.partyarray[index].secondaryclass, this.UNIQUECHARS[ind].race)) {
+            this.updatePartyMember(id, "secclass", "");
+          }
+
+          if (!this.abilityCanBeRace(this.partyarray[index].pability, false, this.UNIQUECHARS[ind].race)) {
+            this.updatePartyMember(id, "pability", "");
+          }
+          if (!this.abilityCanBeRace(this.partyarray[index].rability, true, this.UNIQUECHARS[ind].race)) {
+            this.updatePartyMember(id, "rability", "");
+          }
+          
           this.UNIQUECHARS[ind].present = true;
         }
 
@@ -164,6 +179,15 @@ export class PartyService {
         //after reassigning, check if we were LEAVING a unique char: if so, mark them as not present
         if (oldind != -1) {
           this.UNIQUECHARS[oldind].present = false;
+          //also check if classes or abilities are unique to that char: if so, unassign
+          if (this.partyarray[index].primaryclass == this.UNIQUECHARS[oldind].class) {
+            this.updatePartyMember(id, "priclass", "");
+          }
+          if (this.partyarray[index].secondaryclass == this.UNIQUECHARS[oldind].class) {
+            this.updatePartyMember(id, "secclass", "");
+          }
+          //todo: add data about custom abilities to unique chars in order to unassign them!
+
           //also if new assignment is not unique, AND default race matches the old assignment, then clear default race
           if (ind == -1 && this.partyarray[index].race == this.UNIQUECHARS[oldind].race) {
             this.updatePartyMember(id, "race", "-1");
@@ -238,7 +262,8 @@ export class PartyService {
           }
 
           //if UNassigning a unique character via their unique class, then revert their name
-          if (prevuniq == uniqind) {
+          if (this.partyarray[index].primaryclass == newvalue) {
+            console.log("Unassigning unique char via class: clear name")
             this.partyarray[index].primaryclass = "";
             this.updatePartyMember(id, "name", "Unit " + id);
             this.partyarray[index].changetracker++;
@@ -267,7 +292,7 @@ export class PartyService {
         }
 
         this.partyarray[index].changetracker++;
-        this.updateNameForUniqueClasses(id, newvalue);
+        this.updateNameForUniqueClasses(id, newvalue, this.partyarray[index].unitname);
         break;
       }
 
@@ -313,7 +338,7 @@ export class PartyService {
           this.partyarray[index].secondaryclass = newvalue;
         }
         this.partyarray[index].changetracker++;
-        this.updateNameForUniqueClasses(id, newvalue);
+        this.updateNameForUniqueClasses(id, newvalue, this.partyarray[index].unitname);
         break;
       }
 
@@ -396,6 +421,16 @@ export class PartyService {
     return undefined;
   }
 
+  //GIVEN CLASSNAME AND RACE, RETURN TRUE IF RACE CAN HAVE THAT CLASS
+  classCanBeRace(classname: string, race: number) {
+    let vis = this.getClassViableRaces(classname);
+    if (vis?.includes(race.toString())) {
+      return true;
+    }
+    return false;
+  };
+
+
   //GIVEN ABILITY AND REACTIVE BOOL, GET VIABLE RACES IN AN ARRAY OF STRINGS
   getAbilityViableRaces(abilityname: string, reactive: boolean) {
     let data = {viableraces: ''};
@@ -413,6 +448,15 @@ export class PartyService {
     }
     return undefined;
   }
+
+  //GIVEN ABILITYNAME AND RACE, RETURN TRUE IF RACE CAN HAVE THAT ABILITY
+  abilityCanBeRace(abilityname: string, reactive: boolean, race: number) {
+    let vis:any = this.getAbilityViableRaces(abilityname, reactive);
+    if (vis?.includes(race.toString())) {
+      return true;
+    }
+    return false;
+  };
 
   //GIVEN RACE, GET NAME OF CLASS FOR DEFAULTSPRITE
   getDefaultSpriteForRace(race: number) {
@@ -435,7 +479,7 @@ export class PartyService {
     }
   }
 
-  updateNameForUniqueClasses(id: number, classname: string) {
+  updateNameForUniqueClasses(id: number, classname: string, currentname: string) {
     let unit = this.getPartyMemberById(id);
     if (!unit) {
       console.error(id, "Unit DNE");
@@ -445,6 +489,10 @@ export class PartyService {
     //if the classname is on the list of uniquechars, update unit name accordingly
     let char_ind = this.UNIQUECHARS.findIndex((el) => el.class == classname);
     if (char_ind != -1) {
+      if (this.UNIQUECHARS[char_ind].name == currentname) {
+        console.log("Name is already properly assigned: bail");
+        return;
+      }
       this.updatePartyMember(id, "name", this.UNIQUECHARS[char_ind].name);
       this.UNIQUECHARS[char_ind].present = true;   
     } 

@@ -1,38 +1,40 @@
 <div class="unit">
-    <div class="unit-header">
-        <div class="sprite-box">
-            <img
-                class="unit-sprite" 
-                alt="{{ this?.priclassentry }}" 
-                src="{{this.data.changetracker | selectSprite:this.data}}"
-            >
-            <!-- todo: think about how you want to handle race without classes and classes withour races forreallll this isnt the way -->
-        </div>
-        <div>
-            <span class="name" [hidden]="namechange" role="button"
-            (click)="activateNameForm()" (keyup.enter)="activateNameForm()" tabindex="0"
-            >{{ this.data.unitname }}</span> 
-            <form class="nameform" [hidden]="!namechange" [formGroup]="nameForm" (submit)="submitNameForm()"
-                [cdkTrapFocusAutoCapture]="namechange" [cdkTrapFocus]="namechange"
-            >
-                <label>Enter a new unit name:
-                    <input #nform class="nameform-input" type="text" 
-                    formControlName="name" maxlength="16"/>
-                </label>
-            </form>
+    <div class="unit-wrapper">
+        <div class="unit-header">
+            <div class="sprite-box">
+                <img
+                    class="unit-sprite" 
+                    alt="{{ this?.priclassentry }}" 
+                    src="{{this.data.changetracker | selectSprite:this.data}}"
+                >
+                <!-- todo: think about how you want to handle race without classes and classes withour races forreallll this isnt the way -->
+            </div>
+            <div>
+                <span class="name" [hidden]="namechange" role="button"
+                (click)="activateNameForm()" (keyup.enter)="activateNameForm()" tabindex="0"
+                >{{ this.data.unitname }}</span> 
+                <form class="nameform" [hidden]="!namechange" [formGroup]="nameForm" (submit)="submitNameForm()"
+                    [cdkTrapFocusAutoCapture]="namechange" [cdkTrapFocus]="namechange"
+                >
+                    <label>Enter a new unit name:
+                        <input #nform class="nameform-input" type="text" 
+                        formControlName="name" maxlength="16"/>
+                    </label>
+                </form>
+                
+            </div>
             
         </div>
-        
-    </div>
-    <div class="stat-box">
-        <div> <span class="stat-arrow">A→</span> {{data.primaryclass }}</div>
-        <div> <span class="stat-arrow">A→</span> {{data.secondaryclass }}</div>
-        <div> <span class="stat-arrow">R ↰</span> {{data.rability }}</div>
-        <div> <span class="stat-arrow">P ↑</span> {{data.pability}}</div>
-    </div>
-    <div class="unit-footer">
-        <button [routerLink]=[editurl]>Edit</button>
-        <button class="dangerous-button" (click)="deletemodal.showModal()">Delete</button>
+        <div class="stat-box">
+            <div> <span class="stat-arrow">A→</span> {{data.primaryclass }}</div>
+            <div> <span class="stat-arrow">A→</span> {{data.secondaryclass }}</div>
+            <div> <span class="stat-arrow">R ↰</span> {{data.rability }}</div>
+            <div> <span class="stat-arrow">P ↑</span> {{data.pability}}</div>
+        </div>
+        <div class="unit-footer">
+            <button [routerLink]=[editurl]>Edit</button>
+            <button class="dangerous-button" (click)="deletemodal.showModal()">Delete</button>
+        </div>
     </div>
 </div>
 

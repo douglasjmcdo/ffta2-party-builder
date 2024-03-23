@@ -3,13 +3,13 @@ import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { PartyService } from '../party.service';
 import { CommonModule } from '@angular/common';
 import { Unitdata } from '../unitdata';
-import { Observable, Subscription, of } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { SelectSpritePipe } from '../select-sprite.pipe';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { A11yModule } from '@angular/cdk/a11y';
+import { trigger, style, animate, transition } from '@angular/animations';
 
-
-//note: crit quicken is only available to penelo for viera... does that require any extra logic?
+//todo: crit quicken is only available to penelo for viera... does that require any extra logic?
 
 
 @Component({
@@ -17,7 +17,27 @@ import { A11yModule } from '@angular/cdk/a11y';
   standalone: true,
   imports: [RouterOutlet, RouterLink, RouterLinkActive, CommonModule, ReactiveFormsModule, SelectSpritePipe, A11yModule],
   templateUrl: './edit-page.component.html',
-  styleUrl: './edit-page.component.css'
+  styleUrl: './edit-page.component.css',
+  animations: [
+    trigger(
+      'slideInOut', 
+      [
+        transition(
+          ':enter', 
+          [
+            style({ width: 0 }),
+            animate('.3s ease-in-out', style({ width: '!'})),
+          ]
+        ),
+        transition(
+          ':leave', 
+          [
+            animate('.3s ease-in-out', style({ width: 0}))
+          ]
+        )
+      ]
+    ),
+  ]
 })
 export class EditPageComponent {
   @Input() routed_id = '-1';
